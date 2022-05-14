@@ -1,5 +1,5 @@
 import { defaultProps } from './type';
-import { Text, h, defineComponent } from "vue";
+import { Text, h, defineComponent, ref } from "vue";
 import type { Ref, } from "vue";
 
 export const VividTyping = defineComponent({
@@ -88,7 +88,7 @@ function updateContext(props: defaultProps, content: string, types: Ref, slots: 
         content = slots.default()[0].children;
         types.value = "";
         dfs();
-      }, delay + interval);
+      }, interval);
     } else {
       finish && finish();
     }

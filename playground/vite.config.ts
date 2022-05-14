@@ -7,8 +7,10 @@ import Pages from 'vite-plugin-pages'
 import Components from 'unplugin-vue-components/vite'
 import AutoImport from 'unplugin-auto-import/vite'
 import Unocss from 'unocss/vite'
+import UnocssIcons from '@unocss/preset-icons'
 
 export default defineConfig({
+  base: "./",
   resolve: {
     alias: {
       '~/': `${path.resolve(__dirname, 'src')}/`,
@@ -40,7 +42,18 @@ export default defineConfig({
 
     // https://github.com/antfu/unocss
     // see unocss.config.ts for config
-    Unocss(),
+    Unocss({
+      presets: [
+        UnocssIcons({
+          // options
+          prefix: 'i-',
+          extraProperties: {
+            display: 'inline-block'
+          }
+        }),
+        // presetUno() - if you want to use other atomic CSS as well
+      ],
+    }),
   ],
 
   // https://github.com/vitest-dev/vitest

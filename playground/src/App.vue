@@ -17,7 +17,7 @@
     <vivid-typing :interval="100" :delay="4500" h-10 :finish="finish">
       Do you love it?
     </vivid-typing>
-    <vivid-typing :interval="100" :delay="6000" h-10 :finish="finish">
+    <vivid-typing :interval="100" :delay="6000" h-10 :infinity="true">
       Let's give it a try
     </vivid-typing>
     <Footer />
@@ -25,7 +25,6 @@
 </template>
 
 <script setup lang="ts">
-import { VividTyping } from "./index";
 function finish() {
   console.log("finish");
 }

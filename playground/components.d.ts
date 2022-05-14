@@ -5,7 +5,6 @@
 declare module 'vue' {
   export interface GlobalComponents {
     Footer: typeof import('./src/components/Footer.vue')['default']
-    VividTyping: typeof import('./src/components/Vivid-typing.vue')['default']
   }
 }
 
