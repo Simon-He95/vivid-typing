@@ -1,13 +1,40 @@
 <script setup lang="ts">
-const { interval = 30, delay = 0, infinity, finish } = defineProps<{
+import { Text } from "vue";
+const {
+  interval = 30,
+  delay = 0,
+  infinity,
+  finish,
+  spiltTag,
+  spiltClass,
+  spiltStyle,
+} = defineProps<{
   interval?: number;
   infinity?: boolean;
   delay?: number;
   finish?: Function;
+  spiltTag?: string;
+  spiltClass?: string;
+  spiltStyle?: string | Function;
 }>();
 
 const slots = useSlots();
-let content = slots.default()[0].children;
+
+function joinSlots(data) {
+  if (!Array.isArray(data)) {
+    return data;
+  }
+  return data
+    .map((item) => {
+      if (item.type === Text) return item.children;
+      return `<${item.type} v-bind="${item.props}">${joinSlots(item.children)}</${
+        item.type
+      }>`;
+    })
+    .join("");
+}
+let content = joinSlots(slots.default());
+console.log(content);
 const types = $ref("");
 function updateContext() {
   return dfs();
@@ -17,7 +44,11 @@ function updateContext() {
       content = content.slice(2);
       return dfs();
     }
-    types += content[0];
+    if (spiltTag)
+      types += `<${spiltTag} class="${spiltClass || ""}" style="${
+        typeof spiltStyle === "function" ? spiltStyle() : spiltStyle
+      }">${content[0]}</${spiltTag}>`;
+    else types += content[0];
     content = content.slice(1);
     if (content.length !== 0) {
       setTimeout(() => dfs(), interval);
@@ -26,7 +57,6 @@ function updateContext() {
         content = slots.default()[0].children;
         types = "";
         dfs();
-        console.log("22");
       }, delay + interval);
     } else {
       finish && finish();
@@ -37,7 +67,5 @@ setTimeout(updateContext, delay);
 </script>
 
 <template>
-  <div whitespace-pre-line>{{ types }}</div>
+  <div whitespace-pre-line transition="all" v-html="types"></div>
 </template>
-
-<style scoped></style>
