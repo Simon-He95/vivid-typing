@@ -11,7 +11,7 @@
     "typing",
     "vue"
   ],
-  "homepage": "https://github.dev/Simon-He95/vivid-typing",
+  "homepage": "http://www.hejian.club:8080/vivid-typing/",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
