@@ -1,17 +1,17 @@
 {
   "name": "vivid-typing",
   "author": "Simon He",
-  "version": "0.0.3",
+  "version": "1.0.0",
   "repository": {
     "type": "git",
-    "url": "git + https://github.dev/Simon-He95/vivid-typing.git"
+    "url": "git + git@github.com:Simon-He95/vivid-typing.git"
   },
   "keywords": [
     "vivid-typing",
     "typing",
     "vue"
   ],
-  "homepage": "http://www.hejian.club:8080/vivid-typing/",
+  "homepage": "http://vivid-typing.hejian.club/",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -28,7 +28,7 @@
   ],
   "packageManager": "pnpm@6.32.3",
   "bugs": {
-    "url": "https://github.com/antfu/vivid-typing/issues"
+    "url": "https://github.com/Simon-He95/vivid-typing/issues"
   },
   "scripts": {
     "build": "pkgroll",
@@ -52,7 +52,7 @@
     "typescript": "^4.6.2",
     "vite": "^2.8.6",
     "vitest": "^0.7.0",
-    "vivid-typing": "workspace:^0.0.1",
+    "vivid-typing": "workspace:1.0.0",
     "vue-router": "^4.0.14",
     "vue-tsc": "^0.33.2"
   }

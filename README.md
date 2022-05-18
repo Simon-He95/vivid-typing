@@ -20,13 +20,14 @@
 ## usage
 
 ```markdown
-  <vivid-typing :interval="100" :delay="0" h-10> Hi </vivid-typing>
+  <vivid-typing :interval="100" :delay="0" h-10 content="hi"></vivid-typing>
 ```
 
 ## api
 
 ```markdown
 type defaultProps = {
+  content: string | array // 渲染的内容
   interval: number  // 文字间隔
   delay: number    // 延迟多久开始
   infinity: boolean | undefined // 是否无限循环

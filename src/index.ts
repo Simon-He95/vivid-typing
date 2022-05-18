@@ -1,5 +1,5 @@
 import { defaultProps } from './type';
-import { Text, h, defineComponent, ref } from "vue";
+import { h, defineComponent, ref, watch } from "vue";
 import type { Ref, } from "vue";
 
 export const VividTyping = defineComponent({
@@ -7,6 +7,10 @@ export const VividTyping = defineComponent({
     interval: {
       type: Number,
       default: 100
+    },
+    content: {
+      type: [String, Array],
+      default: ''
     },
     infinity: {
       type: Boolean,
@@ -29,39 +33,30 @@ export const VividTyping = defineComponent({
     }
   },
   setup(props, { slots }) {
-    const { delay } = props;
-    let content = joinSlots((slots as any).default());
-    console.log(content);
-
     const types = ref("");
-    setTimeout(() => updateContext(props, content, types, slots), delay);
+    initData(props, types)
+    watch(props, (newVProps) => {
+      initData(newVProps, types)
+    })
 
     return () => h('div', {
       innerHTML: types.value
-    })
+    }, '')
   }
 })
 
-
-function joinSlots(data: Array<any> | string): string {
-  if (!Array.isArray(data)) {
-    return data;
-  }
-  return data
-    .map((item) => {
-      if (item.type === Text) return item.children;
-      return `<${item.type} >${joinSlots(item.children)}</${item.type
-        }>`;
-    })
-    .join("");
+function initData(props: any, types: Ref<string>) {
+  let { delay, content } = props;
+  const copyContent = content
+  setTimeout(() => updateContext(props, content, types, copyContent), delay);
 }
 
 
-function updateContext(props: defaultProps, content: string, types: Ref, slots: any) {
 
+function updateContext(props: defaultProps, content: string, types: Ref, copyContent: string) {
+  let currentIndex = -1
   const {
     interval,
-    delay,
     infinity,
     finish,
     spiltTag,
@@ -70,23 +65,21 @@ function updateContext(props: defaultProps, content: string, types: Ref, slots: 
 
   return dfs();
   function dfs(): void {
-    if (content[0] === "\\" && content[1] === "n") {
-      types.value += " \n ";
-      content = content.slice(2);
-      return dfs();
-    }
-
+    currentIndex++
     if (spiltTag)
-      types.value += `<${spiltTag} class="${spiltClass || ""}" style="${typeof spiltStyle === "function" ? spiltStyle() : spiltStyle
+      types.value += `<${spiltTag} class="${spiltClass || ""}" style="${spiltStyle ? typeof spiltStyle === "function" ? spiltStyle(currentIndex) : spiltStyle : ''
         }">${content[0]}</${spiltTag}>`;
     else types.value += content[0];
     content = content.slice(1);
     if (content.length !== 0) {
       setTimeout(dfs, interval);
     } else if (infinity) {
+      currentIndex = 0
       setTimeout(() => {
-        content = slots.default()[0].children;
         types.value = "";
+      }, 100)
+      setTimeout(() => {
+        content = copyContent;
         dfs();
       }, interval);
     } else {
