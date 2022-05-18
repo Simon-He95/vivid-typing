@@ -57,6 +57,7 @@
       m-y-10
       :infinity="true"
       justify-center
+      :stable="true"
     >
     </vivid-typing>
     <Footer />

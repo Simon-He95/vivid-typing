@@ -30,6 +30,10 @@ export const VividTyping = defineComponent({
     },
     spiltStyle: {
       type: [String, Function],
+    },
+    stable: {
+      type: Boolean,
+      default: false
     }
   },
   setup(props, { slots }) {
@@ -48,20 +52,22 @@ export const VividTyping = defineComponent({
 function initData(props: any, types: Ref<string>) {
   let { delay, content } = props;
   const copyContent = content
-  setTimeout(() => updateContext(props, content, types, copyContent), delay);
+  setTimeout(() => updateContext(props, types, copyContent), delay);
 }
 
 
 
-function updateContext(props: defaultProps, content: string, types: Ref, copyContent: string) {
+function updateContext(props: defaultProps, types: Ref, copyContent: string) {
   let currentIndex = -1
-  const {
+  let {
     interval,
     infinity,
+    content,
     finish,
     spiltTag,
     spiltClass,
-    spiltStyle, } = props
+    spiltStyle,
+    stable } = props
 
   return dfs();
   function dfs(): void {
@@ -75,10 +81,14 @@ function updateContext(props: defaultProps, content: string, types: Ref, copyCon
       setTimeout(dfs, interval);
     } else if (infinity) {
       currentIndex = 0
+      if (!stable) {
+        setTimeout(() => {
+          types.value = "";
+        }, 100)
+      }
+
       setTimeout(() => {
-        types.value = "";
-      }, 100)
-      setTimeout(() => {
+        if (stable) types.value = "";
         content = copyContent;
         dfs();
       }, interval);

@@ -6,4 +6,6 @@ export type defaultProps = {
   spiltTag: string | undefined
   spiltClass: string | undefined
   spiltStyle: string | Function | undefined
+  content: string | string[]
+  stable: boolean
 }
