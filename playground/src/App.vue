@@ -100,6 +100,6 @@ function styleFn(i) {
 function AnimalstyleFn(i) {
   return `color:rgb(${Math.random() * 255},${Math.random() * 255}, ${
     Math.random() * 255
-  });animation-delay:${i * 0.1}s;margin:0 20px`;
+  });animation-delay:${i * 0.05}s;margin:0 20px`;
 }
 </script>
