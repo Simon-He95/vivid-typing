@@ -1,6 +1,6 @@
 # Vivid Typing
 
-[online](http://www.hejian.club:8080/vivid-typing/)
+[online](http://vivid-typing.hejian.club/)
 
 
 ## start
