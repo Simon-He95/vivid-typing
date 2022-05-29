@@ -112,7 +112,8 @@ function updateContext(props: defaultProps, types: Ref, copyContent: string, tex
     scrollX,
     scrollY,
     speed } = props
-
+  if (!Array.isArray(content))
+    content = content.toString()
   if (typeof content === 'string' && content.indexOf(types.value) === 0) {
     content = content.substring(types.value.length)
   }
@@ -126,7 +127,6 @@ function updateContext(props: defaultProps, types: Ref, copyContent: string, tex
     else if (content.length) { types.value += content[0]; }
     if (content.length)
       content = content.slice(1);
-    console.log(content)
     if (content.length !== 0) {
       let timer = setTimeout(dfs, interval);
       timers.push(timer)
@@ -145,7 +145,6 @@ function updateContext(props: defaultProps, types: Ref, copyContent: string, tex
         paddingTop.value = 0
       else
         paddingTop.value = paddingTop.value + speed / 5
-      console.log(paddingTop.value)
       let timer = setTimeout(() => {
         dfs();
       }, interval);
