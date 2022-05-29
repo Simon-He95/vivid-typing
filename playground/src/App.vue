@@ -21,8 +21,26 @@
       justify-center
       flex="~"
     />
-    <vivid-typing m-y-10 :interval="100" :delay="1500" h-10 content="What your name? ">
-    </vivid-typing>
+    <div w-100 border-1 border-rd-yellow ma m-y-5>
+      <vivid-typing
+        :interval="100"
+        :delay="1500"
+        :scrollY="true"
+        h-10
+        content="What your name  ?"
+      >
+      </vivid-typing>
+    </div>
+    <div w-100 border-1 border-rd-yellow ma m-y-5>
+      <vivid-typing
+        :interval="100"
+        :delay="1500"
+        :scrollX="true"
+        h-10
+        content="What your name  ?"
+      >
+      </vivid-typing>
+    </div>
     <vivid-typing m-y-10 :interval="100" :delay="3000" h-10 content="How old are you?">
     </vivid-typing>
     <vivid-typing
@@ -46,17 +64,17 @@
     >
     </vivid-typing>
     <vivid-typing
+      h-20
       :interval="500"
       flex="~"
-      h-10
       spilt-tag="span"
       :content="Animals"
       spilt-class="animate-bounce animate-duration-500"
       :spilt-style="AnimalstyleFn"
       text-5xl
       m-y-10
-      :infinity="true"
       justify-center
+      items-center
       :stable="true"
     >
     </vivid-typing>

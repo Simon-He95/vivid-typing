@@ -8,4 +8,7 @@ export type defaultProps = {
   spiltStyle: string | Function | undefined
   content: string | string[]
   stable: boolean
+  scrollX: boolean
+  scrollY: boolean
+  speed: number
 }

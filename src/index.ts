@@ -2,6 +2,8 @@ import { defaultProps } from './type';
 import { h, defineComponent, ref, watch } from "vue";
 import type { Ref, } from "vue";
 
+let timers: any[] = []
+
 export const VividTyping = defineComponent({
   props: {
     interval: {
@@ -34,30 +36,69 @@ export const VividTyping = defineComponent({
     stable: {
       type: Boolean,
       default: false
+    },
+    scrollX: {
+      type: Boolean,
+      default: false
+    },
+    scrollY: {
+      type: Boolean,
+      default: false
+    },
+    speed: {
+      type: Number,
+      default: 5
     }
   },
-  setup(props, { slots }) {
+  setup(props) {
     const types = ref("");
-    initData(props, types)
-    watch(props, (newVProps) => {
-      initData(newVProps, types)
+    const textIndent = ref<number>(0);
+    const paddingTop = ref<number>(0);
+    initData(props, types, textIndent, paddingTop)
+    watch(props, (newProps: any) => {
+      timers.forEach(timer => clearTimeout(timer))
+      if (typeof newProps.content === 'string')
+        deleteModel(types, newProps, textIndent, paddingTop)
+      else
+        initData(newProps, types, textIndent, paddingTop)
     })
 
     return () => h('div', {
-      innerHTML: types.value
+      innerHTML: types.value,
+      style: {
+        'white-space': 'nowrap',
+        'text-indent': textIndent.value + '%',
+        'overflow': 'hidden',
+        "will-change": "transform",
+        'padding-top': paddingTop.value + '%'
+      }
     }, '')
   }
 })
 
-function initData(props: any, types: Ref<string>) {
+function initData(props: any, types: Ref<string>, textIndent: Ref<number>, paddingTop: Ref<number>) {
   let { delay, content } = props;
   const copyContent = content
-  setTimeout(() => updateContext(props, types, copyContent), delay);
+  timers.length = 0
+  setTimeout(() => updateContext(props, types, copyContent, textIndent, paddingTop), delay);
+}
+
+function deleteModel(types: Ref<string>, newProps: defaultProps, textIndent: Ref<number>, paddingTop: Ref<number>) {
+  const { content, interval } = newProps
+
+  if (types.value.length > 0 && content.indexOf(types.value) !== 0) {
+    types.value = types.value.substring(0, types.value.length - 1)
+    setTimeout(() => {
+      deleteModel(types, newProps, textIndent, paddingTop)
+    }, interval)
+  } else if (content.indexOf(types.value) === 0) {
+    initData(newProps, types, textIndent, paddingTop)
+  }
 }
 
 
 
-function updateContext(props: defaultProps, types: Ref, copyContent: string) {
+function updateContext(props: defaultProps, types: Ref, copyContent: string, textIndent: Ref<number>, paddingTop: Ref<number>) {
   let currentIndex = -1
   let {
     interval,
@@ -67,7 +108,14 @@ function updateContext(props: defaultProps, types: Ref, copyContent: string) {
     spiltTag,
     spiltClass,
     spiltStyle,
-    stable } = props
+    stable,
+    scrollX,
+    scrollY,
+    speed } = props
+
+  if (typeof content === 'string' && content.indexOf(types.value) === 0) {
+    content = content.substring(types.value.length)
+  }
 
   return dfs();
   function dfs(): void {
@@ -75,10 +123,33 @@ function updateContext(props: defaultProps, types: Ref, copyContent: string) {
     if (spiltTag)
       types.value += `<${spiltTag} class="${spiltClass || ""}" style="${spiltStyle ? typeof spiltStyle === "function" ? spiltStyle(currentIndex) : spiltStyle : ''
         }">${content[0]}</${spiltTag}>`;
-    else types.value += content[0];
-    content = content.slice(1);
+    else if (content.length) { types.value += content[0]; }
+    if (content.length)
+      content = content.slice(1);
+    console.log(content)
     if (content.length !== 0) {
-      setTimeout(dfs, interval);
+      let timer = setTimeout(dfs, interval);
+      timers.push(timer)
+    } else if (scrollX) {
+      if (textIndent.value <= -200)
+        textIndent.value = 100
+      else
+        textIndent.value = textIndent.value - speed
+
+      let timer = setTimeout(() => {
+        dfs();
+      }, interval);
+      timers.push(timer)
+    } else if (scrollY) {
+      if (paddingTop.value >= 10)
+        paddingTop.value = 0
+      else
+        paddingTop.value = paddingTop.value + speed / 5
+      console.log(paddingTop.value)
+      let timer = setTimeout(() => {
+        dfs();
+      }, interval);
+      timers.push(timer)
     } else if (infinity) {
       currentIndex = 0
       if (!stable) {
@@ -87,11 +158,12 @@ function updateContext(props: defaultProps, types: Ref, copyContent: string) {
         }, 100)
       }
 
-      setTimeout(() => {
+      let timer = setTimeout(() => {
         if (stable) types.value = "";
         content = copyContent;
         dfs();
       }, interval);
+      timers.push(timer)
     } else {
       finish && finish();
     }

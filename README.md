@@ -21,8 +21,6 @@
 
 ```markdown
   <vivid-typing :interval="100" :delay="0" h-10 content="hi"></vivid-typing>
-```
-
 ## api
 
 ```markdown
@@ -36,6 +34,9 @@ type defaultProps = {
   spiltStyle: string | Function | undefined // 分割的Tag加上spiltStyle样式，支持函数可以正对每个分割的Tag独立的style 
   content: string | string[] // 渲染的内容
   stable: boolean // 默认在finish之后content会被清空在重新渲染，如果为true，会在清空后立即展示content的第一个元素
+  scrollX: boolean // 实现一个横向通知栏的效果
+  scrollY: boolean // 实现一个纵向通知栏的效果
+  speed: number // 控制通知栏的速度
 }
 
 ```
