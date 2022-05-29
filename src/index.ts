@@ -2,7 +2,6 @@ import { defaultProps } from './type';
 import { h, defineComponent, ref, watch } from "vue";
 import type { Ref, } from "vue";
 
-let timers: any[] = []
 
 export const VividTyping = defineComponent({
   props: {
@@ -54,13 +53,15 @@ export const VividTyping = defineComponent({
     const types = ref("");
     const textIndent = ref<number>(0);
     const paddingTop = ref<number>(0);
-    initData(props, types, textIndent, paddingTop)
+    let timers: any[] = []
+
+    initData(props, types, textIndent, paddingTop, timers)
     watch(props, (newProps: any) => {
       timers.forEach(timer => clearTimeout(timer))
       if (typeof newProps.content === 'string')
-        deleteModel(types, newProps, textIndent, paddingTop)
+        deleteModel(types, newProps, textIndent, paddingTop, timers)
       else
-        initData(newProps, types, textIndent, paddingTop)
+        initData(newProps, types, textIndent, paddingTop, timers)
     })
 
     return () => h('div', {
@@ -76,29 +77,29 @@ export const VividTyping = defineComponent({
   }
 })
 
-function initData(props: any, types: Ref<string>, textIndent: Ref<number>, paddingTop: Ref<number>) {
+function initData(props: any, types: Ref<string>, textIndent: Ref<number>, paddingTop: Ref<number>, timers: any[]) {
   let { delay, content } = props;
   const copyContent = content
   timers.length = 0
-  setTimeout(() => updateContext(props, types, copyContent, textIndent, paddingTop), delay);
+  setTimeout(() => updateContext(props, types, copyContent, textIndent, paddingTop, timers), delay);
 }
 
-function deleteModel(types: Ref<string>, newProps: defaultProps, textIndent: Ref<number>, paddingTop: Ref<number>) {
+function deleteModel(types: Ref<string>, newProps: defaultProps, textIndent: Ref<number>, paddingTop: Ref<number>, timers: any[]) {
   const { content, interval } = newProps
 
   if (types.value.length > 0 && content.indexOf(types.value) !== 0) {
     types.value = types.value.substring(0, types.value.length - 1)
     setTimeout(() => {
-      deleteModel(types, newProps, textIndent, paddingTop)
+      deleteModel(types, newProps, textIndent, paddingTop, timers)
     }, interval)
   } else if (content.indexOf(types.value) === 0) {
-    initData(newProps, types, textIndent, paddingTop)
+    initData(newProps, types, textIndent, paddingTop, timers)
   }
 }
 
 
 
-function updateContext(props: defaultProps, types: Ref, copyContent: string, textIndent: Ref<number>, paddingTop: Ref<number>) {
+function updateContext(props: defaultProps, types: Ref, copyContent: string, textIndent: Ref<number>, paddingTop: Ref<number>, timers: any[]) {
   let currentIndex = -1
   let {
     interval,
