@@ -54,14 +54,16 @@ export const VividTyping = defineComponent({
     const textIndent = ref<number>(0);
     const paddingTop = ref<number>(0);
     let timers: any[] = []
-
-    initData(props, types, textIndent, paddingTop, timers)
+    let preContent: string | unknown[] = ''
+    initData(props, types, textIndent, paddingTop, timers, preContent as string)
+    preContent = props.content as string
     watch(props, (newProps: any) => {
       timers.forEach(timer => clearTimeout(timer))
       if (typeof newProps.content === 'string')
-        deleteModel(types, newProps, textIndent, paddingTop, timers)
+        deleteModel(types, newProps, textIndent, paddingTop, timers, preContent as string)
       else
-        initData(newProps, types, textIndent, paddingTop, timers)
+        initData(newProps, types, textIndent, paddingTop, timers, preContent as string)
+      preContent = props.content
     })
 
     return () => h('div', {
@@ -77,29 +79,32 @@ export const VividTyping = defineComponent({
   }
 })
 
-function initData(props: any, types: Ref<string>, textIndent: Ref<number>, paddingTop: Ref<number>, timers: any[]) {
+function initData(props: any, types: Ref<string>, textIndent: Ref<number>, paddingTop: Ref<number>, timers: any[], preContent: string) {
   let { delay, content } = props;
   const copyContent = content
   timers.length = 0
-  setTimeout(() => updateContext(props, types, copyContent, textIndent, paddingTop, timers), delay);
+  setTimeout(() => updateContext(props, types, copyContent, textIndent, paddingTop, timers, preContent), delay);
 }
 
-function deleteModel(types: Ref<string>, newProps: defaultProps, textIndent: Ref<number>, paddingTop: Ref<number>, timers: any[]) {
-  const { content, interval } = newProps
-
-  if (types.value.length > 0 && content.indexOf(types.value) !== 0) {
-    types.value = types.value.substring(0, types.value.length - 1)
+function deleteModel(types: Ref<string>, newProps: defaultProps, textIndent: Ref<number>, paddingTop: Ref<number>, timers: any[], preContent: string) {
+  let { content, interval, spiltTag, spiltClass, spiltStyle } = newProps
+  if (types.value.length > 0 && content.indexOf(preContent) !== 0) {
+    preContent = preContent.substring(0, preContent.length - 1)
+    if (spiltTag) {
+      types.value = findSplitLast(types.value, spiltTag)
+    } else
+      types.value = types.value.substring(0, types.value.length - 1)
     setTimeout(() => {
-      deleteModel(types, newProps, textIndent, paddingTop, timers)
+      deleteModel(types, newProps, textIndent, paddingTop, timers, preContent)
     }, interval)
-  } else if (content.indexOf(types.value) === 0) {
-    initData(newProps, types, textIndent, paddingTop, timers)
+  } else if (content.indexOf(preContent) === 0) {
+    initData(newProps, types, textIndent, paddingTop, timers, preContent)
   }
 }
 
 
 
-function updateContext(props: defaultProps, types: Ref, copyContent: string, textIndent: Ref<number>, paddingTop: Ref<number>, timers: any[]) {
+function updateContext(props: defaultProps, types: Ref, copyContent: string, textIndent: Ref<number>, paddingTop: Ref<number>, timers: any[], preContent: string) {
   let currentIndex = -1
   let {
     interval,
@@ -115,17 +120,16 @@ function updateContext(props: defaultProps, types: Ref, copyContent: string, tex
     speed } = props
   if (!Array.isArray(content))
     content = content.toString()
-  if (typeof content === 'string' && content.indexOf(types.value) === 0) {
-    content = content.substring(types.value.length)
-  }
 
+  if (typeof content === 'string' && content.indexOf(preContent) === 0) {
+    content = content.substring(preContent.length)
+  }
   return dfs();
   function dfs(): void {
     currentIndex++
     if (spiltTag)
-      types.value += `<${spiltTag} class="${spiltClass || ""}" style="${spiltStyle ? typeof spiltStyle === "function" ? spiltStyle(currentIndex) : spiltStyle : ''
-        }">${content[0]}</${spiltTag}>`;
-    else if (content.length) { types.value += content[0]; }
+      types.value += spiltContent(content[0], spiltTag, spiltClass, spiltStyle, currentIndex);
+    else if (content.length) types.value += content[0]
     if (content.length)
       content = content.slice(1);
     if (content.length !== 0) {
@@ -171,3 +175,25 @@ function updateContext(props: defaultProps, types: Ref, copyContent: string, tex
 }
 
 
+function findSplitLast(content: string, spiltTag: string) {
+  const len = spiltTag.length + 3
+  content = content.substring(0, content.length - len)
+  const index = content.lastIndexOf(spiltTag)
+  content = content.substring(0, index - 1)
+  return content
+}
+
+function spiltContent(content: string, spiltTag: string, spiltClass: string | undefined, spiltStyle: string | Function | undefined, currentIndex: number) {
+  return `<${spiltTag} class="${spiltClass || ""}" style="${spiltStyle ? typeof spiltStyle === "function" ? spiltStyle(currentIndex) : spiltStyle : ''
+    }">${content}</${spiltTag}>`;
+}
+function spiltContents(content: string | string[], spiltTag: string, spiltClass: string | undefined, spiltStyle: string | Function | undefined) {
+  let currentIndex = -1
+  let result = ""
+  while (content.length) {
+    const current = content[0]
+    content = content.slice(1)
+    result += spiltContent(current, spiltTag, spiltClass, spiltStyle, currentIndex++)
+  }
+  return result
+}

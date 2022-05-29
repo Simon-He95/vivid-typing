@@ -8,7 +8,8 @@
       spilt-tag="span"
       spilt-class="animate-bounce"
       :spilt-style="styleFn"
-      content="l will always loop"
+      content="Vivid Typing"
+      text-2xl
       m-y-10
     >
     </vivid-typing>
@@ -21,15 +22,13 @@
       justify-center
       flex="~"
     />
-    <div w-100 border-1 border-rd-yellow ma m-y-5>
+    <div border-2 w-50 ma border-rd-1 border-dashed m-y-5>
       <vivid-typing
-        :interval="100"
-        :delay="1500"
         :scrollY="true"
-        h-10
-        content="What your name  ?"
-      >
-      </vivid-typing>
+        :content="'当前关卡 level:' + n"
+        text-sm
+        h-5
+      ></vivid-typing>
     </div>
     <div w-100 border-1 border-rd-yellow ma m-y-5>
       <vivid-typing
@@ -41,11 +40,7 @@
       >
       </vivid-typing>
     </div>
-    <vivid-typing m-y-10 :interval="100" :delay="3000" h-10 content="How old are you?">
-    </vivid-typing>
 
-    <vivid-typing m-y-10 :interval="100" :delay="3000" h-10 :content="str">
-    </vivid-typing>
     <vivid-typing
       m-y-10
       :interval="100"
@@ -55,15 +50,6 @@
       spilt-tag="span"
       content="Do you love it"
       animate-fade-out
-    >
-    </vivid-typing>
-    <vivid-typing
-      m-y-10
-      :interval="100"
-      :delay="6000"
-      h-10
-      :infinity="true"
-      content="Let's give it a try"
     >
     </vivid-typing>
     <vivid-typing
@@ -86,17 +72,12 @@
       :content="content1"
       :speed="1"
       m-t-2
+      spiltTag="span"
       style="box-shadow: 0 0 10px rgba(255, 255, 255, 0.5)"
+      :spilt-style="styleFn"
       :finish="finish1"
     ></vivid-typing>
-    <div border-2 w-50 ma border-rd-1 border-dashed m-y-5>
-      <vivid-typing
-        :scrollY="true"
-        :content="'当前关卡 level:' + n"
-        text-sm
-        h-5
-      ></vivid-typing>
-    </div>
+
     <Footer />
   </main>
 </template>
@@ -120,7 +101,6 @@ function finish1() {
     content1.value = contentList[index.value];
   }, 500);
 }
-const str = ref(1000);
 const red =
   '<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" style="vertical-align: -0.125em;" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 64 64">  <path fill="#ec1c24" d="M57.55 14.452c9.697 14.11 6.11 33.405-8 43.1c-14.11 9.697-33.407 6.112-43.1-8c-9.687-14.11-6.111-33.407 8-43.1c14.11-9.697 33.406-6.11 43.1 8"/>  </svg>';
 const yellow =
