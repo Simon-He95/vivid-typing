@@ -1,6 +1,6 @@
 <template>
   <main font-sans p="x-4 y-10" text="center gray-700 dark:gray-200">
-    <!-- <vivid-typing
+    <vivid-typing
       :interval="100"
       :delay="0"
       :infinity="true"
@@ -80,7 +80,7 @@
       items-center
       :stable="true"
     >
-    </vivid-typing> -->
+    </vivid-typing>
 
     <vivid-typing
       :content="content1"
