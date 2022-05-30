@@ -20,22 +20,24 @@
       justify-center
       flex="~"
     />
-    <div border-2 w-50 ma border-rd-1 border-dashed m-y-5>
+    <div border-2 w-50 ma border-rd-1 border-dashed m-y-5 overflow-hidden>
       <vivid-typing
         :scrollY="true"
         :content="'当前关卡 level:' + n"
         text-sm
         h-5
+        :speed="10"
+        :reverse="true"
       ></vivid-typing>
     </div>
-    <div border-1 border-rd-yellow ma m-y-5>
+    <div border-1 border-rd-yellow ma m-y-5 overflow-hidden>
       <vivid-typing
         :interval="100"
         :delay="1500"
-        :scrollX="true"
         flex="~"
         items-center
         justify-center
+        :scrollX="true"
         h-10
         content="What your name  ?"
       >
