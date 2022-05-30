@@ -1,5 +1,5 @@
 <template>
-  <main font-sans p="x-4 y-10" text="center gray-700 dark:gray-200">
+  <main font-sans p="x-4 y-10" text="center gray-700 dark:gray-200" box-content>
     <vivid-typing
       :interval="100"
       :delay="0"
@@ -9,8 +9,8 @@
       spilt-class="animate-bounce"
       :spilt-style="styleFn"
       content="Vivid Typing"
-      text-2xl
-      m-y-10
+      text-5xl
+      m-y-5
     >
     </vivid-typing>
     <vivid-typing
@@ -30,11 +30,13 @@
         h-5
       ></vivid-typing>
     </div>
-    <div w-100 border-1 border-rd-yellow ma m-y-5>
+    <div border-1 border-rd-yellow ma m-y-5>
       <vivid-typing
         :interval="100"
         :delay="1500"
         :scrollX="true"
+        flex="~"
+        items-center
         h-10
         content="What your name  ?"
       >
@@ -42,7 +44,7 @@
     </div>
 
     <vivid-typing
-      m-y-10
+      m-y-5
       :interval="100"
       :delay="4500"
       h-10
@@ -62,6 +64,7 @@
       :spilt-style="AnimalstyleFn"
       text-5xl
       m-y-10
+      :infinity="true"
       justify-center
       items-center
       :stable="true"
