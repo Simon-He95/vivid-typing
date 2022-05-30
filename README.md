@@ -3,9 +3,10 @@
 [online](http://vivid-typing.hejian.club/)
 
 
-## start
+# start
 
 ```bash
+
  npm i vivid-typing # 安装依赖
 
 # main.ts 引入
@@ -17,13 +18,17 @@
   app.mount('#app')
 ```
 
-## usage
+# usage
 
 ```markdown
   <vivid-typing :interval="100" :delay="0" h-10 content="hi"></vivid-typing>
-## api
+```
+ ## 更多使用技巧可以参考[github](https://github.com/Simon-He95/vivid-typing/blob/master/playground/src/App.vue)
+
+# api guide
 
 ```markdown
+
 type defaultProps = {
   interval: number  // 文字间隔
   delay: number    // 延迟多久开始
