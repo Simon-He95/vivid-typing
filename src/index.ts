@@ -119,7 +119,7 @@ export const VividTyping = defineComponent({
         'transform': `translate3d(${x.value}%,${y.value}%,0)`,
         'overflow': 'hidden',
       }
-    }, '')
+    })
   }
 })
 
@@ -240,8 +240,16 @@ function updateContext(props: defaultProps, types: Ref, copyContent: string, x: 
       }, interval);
       timers.push(timer)
     } else {
-      finish && finish();
-      types.value = types.value.replace(/vivid-typing_move|vivid-typing_tag/g, '')
+      setTimeout(() => {
+        const el = vividTypingEl.value?.childNodes[vividTypingEl.value?.childNodes.length - 1] as HTMLElement
+        const attributes = el.getAttribute('class')?.replace(/vivid-typing_move|vivid-typing_tag/g, '') as string
+        el.removeAttribute('class')
+        el.setAttribute('class', attributes)
+      })
+
+      setTimeout(() => {
+        finish && finish();
+      }, interval)
     }
   }
 }
