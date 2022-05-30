@@ -17,7 +17,6 @@
       :interval="1000"
       h-10
       :content="content"
-      :infinity="true"
       justify-center
       flex="~"
     />
@@ -36,6 +35,7 @@
         :scrollX="true"
         flex="~"
         items-center
+        justify-center
         h-10
         content="What your name  ?"
       >
@@ -63,10 +63,10 @@
       :spilt-style="AnimalstyleFn"
       text-5xl
       m-y-10
-      :infinity="true"
       justify-center
       items-center
       :stable="true"
+      :infinity="true"
     >
     </vivid-typing>
 

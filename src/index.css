@@ -1,0 +1,32 @@
+
+.vivid-typing_tagClass, .vivid-typing_class, .vivid-typing_tag{
+  position:relative
+}
+.vivid-typing_tagClass.vivid-typing_move:last-child:after{
+  content:"|";
+  position:absolute;
+  width:1px;
+  top:50%;
+  transform:translateY(-50%);
+  right:-0.5rem;
+  animation:twinkle 0.5s infinite alternate;
+}
+
+.vivid-typing_tag:after{
+  content:"|";
+  position:absolute;
+  width:1px;
+  top:50%;
+  transform:translateY(-50%);
+  right:-0.5rem;
+  animation:twinkle 0.5s infinite alternate;
+}
+
+@keyframes twinkle{
+  0%{
+    opacity:0
+  }
+  100%{
+    opacity:100%
+  }
+}
