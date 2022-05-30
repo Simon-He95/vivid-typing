@@ -14,7 +14,7 @@ style.innerHTML = `
   width:1px;
   top:50%;
   transform:translateY(-50%);
-  right:-0.5rem;
+  right:0;
   animation:twinkle 0.5s infinite alternate;
 }
 
