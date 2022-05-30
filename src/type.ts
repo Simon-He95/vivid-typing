@@ -11,4 +11,5 @@ export type defaultProps = {
   scrollX: boolean
   scrollY: boolean
   speed: number
+  reverse: boolean
 }

@@ -17,25 +17,27 @@
       :interval="1000"
       h-10
       :content="content"
-      :infinity="true"
       justify-center
       flex="~"
     />
-    <div border-2 w-50 ma border-rd-1 border-dashed m-y-5>
+    <div border-2 w-50 ma border-rd-1 border-dashed m-y-5 overflow-hidden>
       <vivid-typing
         :scrollY="true"
         :content="'当前关卡 level:' + n"
         text-sm
         h-5
+        :speed="10"
+        :reverse="true"
       ></vivid-typing>
     </div>
-    <div border-1 border-rd-yellow ma m-y-5>
+    <div border-1 border-rd-yellow ma m-y-5 overflow-hidden>
       <vivid-typing
         :interval="100"
         :delay="1500"
-        :scrollX="true"
         flex="~"
         items-center
+        justify-center
+        :scrollX="true"
         h-10
         content="What's your name  ?"
       >
@@ -63,10 +65,10 @@
       :spilt-style="AnimalstyleFn"
       text-5xl
       m-y-10
-      :infinity="true"
       justify-center
       items-center
       :stable="true"
+      :infinity="true"
     >
     </vivid-typing>
 

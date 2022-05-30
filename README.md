@@ -39,9 +39,10 @@ type defaultProps = {
   spiltStyle: string | Function | undefined // 分割的Tag加上spiltStyle样式，支持函数可以正对每个分割的Tag独立的style 
   content: string | string[] // 渲染的内容
   stable: boolean // 默认在finish之后content会被清空在重新渲染，如果为true，会在清空后立即展示content的第一个元素
-  scrollX: boolean // 实现一个横向通知栏的效果
-  scrollY: boolean // 实现一个纵向通知栏的效果
-  speed: number // 控制通知栏的速度
+  scrollX: boolean // 实现一个横向通知栏的效果(注意实现demo效果需要外层嵌套一个div加上overflow:hidden)
+  scrollY: boolean // 实现一个纵向通知栏的效果(注意实现demo效果需要外层嵌套一个div加上overflow:hidden)
+  speed: number // 控制滚动的速度
+  reverse: boolean // 翻转scrollX和scrollY的方向默认false,向下或向左
 }
 
 ```
