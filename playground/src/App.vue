@@ -4,7 +4,6 @@
       :interval="100"
       :delay="0"
       :infinity="true"
-      h-10
       spilt-tag="span"
       spilt-class="animate-bounce"
       :spilt-style="styleFn"
