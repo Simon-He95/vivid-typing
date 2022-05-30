@@ -37,7 +37,7 @@
         flex="~"
         items-center
         h-10
-        content="What your name  ?"
+        content="What's your name  ?"
       >
       </vivid-typing>
     </div>
