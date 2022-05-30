@@ -6,6 +6,9 @@
     "type": "git",
     "url": "git + git@github.com:Simon-He95/vivid-typing.git"
   },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
   "keywords": [
     "vivid-typing",
     "typing",
