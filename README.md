@@ -23,7 +23,7 @@
 ```markdown
   <vivid-typing :interval="100" :delay="0" h-10 content="hi"></vivid-typing>
 ```
- ## 更多使用技巧可以参考[github](https://github.com/Simon-He95/vivid-typing/blob/master/playground/src/App.vue)
+ ## 更多使用技巧可以参考[Page](https://github.com/Simon-He95/vivid-typing/blob/master/playground/src/App.vue)
 
 # api guide
 
