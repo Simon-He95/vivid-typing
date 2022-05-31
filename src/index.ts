@@ -6,7 +6,7 @@ import type { Ref, } from "vue";
 function insertStyle() {
   if (document.querySelector('#vivid-typing-style') !== null) return
   const style = document.createElement('style')
-  style.type = 'text/css'
+  style.setAttribute('type', 'text/css')
   style.id = 'vivid-typing-style'
   style.innerHTML = `
   .vivid-typing_tagClass, .vivid-typing_class, .vivid-typing_tag{
