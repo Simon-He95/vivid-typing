@@ -1,7 +1,7 @@
 <template>
   <main font-sans p="x-4 y-10" text="center gray-700 dark:gray-200" box-content>
     <vivid-typing
-      :interval="100"
+      :interval="200"
       :delay="0"
       :infinity="true"
       spilt-tag="span"
@@ -10,9 +10,11 @@
       content="Vivid Typing"
       text-5xl
       m-y-5
+      :stable="true"
     >
     </vivid-typing>
     <vivid-typing
+      :infinity="true"
       m-y-10
       :interval="1000"
       h-10

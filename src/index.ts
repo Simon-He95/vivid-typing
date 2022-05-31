@@ -1,44 +1,49 @@
 import { defaultProps } from './type';
-import { h, defineComponent, ref, watch } from "vue";
+import { h, defineComponent, ref, watch, onBeforeMount, onMounted } from "vue";
 import type { Ref, } from "vue";
-const style = document.createElement('style')
-style.type = 'text/css'
-style.innerHTML = `
 
-.vivid-typing_tagClass, .vivid-typing_class, .vivid-typing_tag{
-  position:relative
-}
-.vivid-typing_tagClass.vivid-typing_move:last-child:after{
-  content:"|";
-  position:absolute;
-  width:1px;
-  top:50%;
-  transform:translateY(-50%);
-  right:0;
-  animation:twinkle 0.5s infinite alternate;
-}
 
-.vivid-typing_tag:after{
-  content:"|";
-  position:absolute;
-  width:1px;
-  top:50%;
-  transform:translateY(-50%);
-  right:-0.5rem;
-  animation:twinkle 0.5s infinite alternate;
-}
-
-@keyframes twinkle{
-  0%{
-    opacity:0
+function insertStyle() {
+  if (document.querySelector('#vivid-typing-style') !== null) return
+  const style = document.createElement('style')
+  style.type = 'text/css'
+  style.id = 'vivid-typing-style'
+  style.innerHTML = `
+  .vivid-typing_tagClass, .vivid-typing_class, .vivid-typing_tag{
+    position:relative
   }
-  100%{
-    opacity:100%
+  .vivid-typing_tagClass.vivid-typing_move:last-child:after{
+    content:"|";
+    position:absolute;
+    width:1px;
+    top:50%;
+    transform:translateY(-50%);
+    right:0;
+    animation:twinkle 0.5s infinite alternate;
   }
+  
+  .vivid-typing_tag:after{
+    content:"|";
+    position:absolute;
+    width:1px;
+    top:50%;
+    transform:translateY(-50%);
+    right:-0.5rem;
+    animation:twinkle 0.5s infinite alternate;
+  }
+  
+  @keyframes twinkle{
+    0%{
+      opacity:0
+    }
+    100%{
+      opacity:100%
+    }
+  }
+  
+  `
+  document.head.appendChild(style)
 }
-
-`
-document.head.appendChild(style)
 
 export const VividTyping = defineComponent({
   props: {
@@ -97,15 +102,19 @@ export const VividTyping = defineComponent({
     const y = ref<number>(0);
     let timers: any[] = []
     let preContent: string | unknown[] = ''
-    initData(props, types, x, y, timers, preContent as string, vividTypingEl)
-    preContent = props.content as string
-    watch(props, (newProps: any) => {
-      timers.forEach(timer => clearTimeout(timer))
-      if (typeof newProps.content === 'string')
-        deleteModel(types, newProps, x, y, timers, preContent as string, vividTypingEl)
-      else
-        initData(newProps, types, x, y, timers, preContent as string, vividTypingEl)
-      preContent = props.content
+    onBeforeMount(insertStyle)
+
+    onMounted(() => {
+      initData(props, types, x, y, timers, preContent as string, vividTypingEl)
+      preContent = props.content as string
+      watch(props, (newProps: any) => {
+        timers.forEach(timer => clearTimeout(timer))
+        if (typeof newProps.content === 'string')
+          deleteModel(types, newProps, x, y, timers, preContent as string, vividTypingEl)
+        else
+          initData(newProps, types, x, y, timers, preContent as string, vividTypingEl)
+        preContent = props.content
+      })
     })
 
     return () => h('div', {
@@ -117,7 +126,6 @@ export const VividTyping = defineComponent({
       style: {
         'white-space': 'nowrap',
         'transform': `translate3d(${x.value}%,${y.value}%,0)`,
-        'overflow': 'hidden',
       }
     })
   }
@@ -183,6 +191,8 @@ function updateContext(props: defaultProps, types: Ref, copyContent: string, x: 
       timers.push(timer)
     } else if (scrollX) {
       const el = vividTypingEl.value?.childNodes[0] as HTMLElement
+      if (!el)
+        return
       const attributes = el.getAttribute('class')?.replace('vivid-typing_tag', '') as string
       el.removeAttribute('class')
       el.setAttribute('class', attributes)
@@ -205,6 +215,8 @@ function updateContext(props: defaultProps, types: Ref, copyContent: string, x: 
       timers.push(timer)
     } else if (scrollY) {
       const el = vividTypingEl.value?.childNodes[0] as HTMLElement
+      if (!el)
+        return
       const attributes = el.getAttribute('class')?.replace('vivid-typing_tag', '') as string
       el.removeAttribute('class')
       el.setAttribute('class', attributes)
@@ -242,6 +254,8 @@ function updateContext(props: defaultProps, types: Ref, copyContent: string, x: 
     } else {
       setTimeout(() => {
         const el = vividTypingEl.value?.childNodes[vividTypingEl.value?.childNodes.length - 1] as HTMLElement
+        if (!el)
+          return
         const attributes = el.getAttribute('class')?.replace(/vivid-typing_move|vivid-typing_tag/g, '') as string
         el.removeAttribute('class')
         el.setAttribute('class', attributes)
