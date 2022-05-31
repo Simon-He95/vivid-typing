@@ -201,7 +201,6 @@ function updateContext(props: defaultProps, types: Ref, copyContent: string, x: 
       const ratio = 51 + Math.floor((el.offsetWidth / vividTypingEl.value?.offsetWidth!) * 50)
       if (reverse) {
         if (x.value > ratio) {
-          console.log('22')
           duration.value = 0
           x.value = -ratio
           setTimeout(() => {
@@ -279,7 +278,6 @@ function updateContext(props: defaultProps, types: Ref, copyContent: string, x: 
         const el = vividTypingEl.value?.childNodes[vividTypingEl.value?.childNodes.length - 1] as HTMLElement
         if (!el)
           return
-        console.log('22')
         const attributes = el.getAttribute('class')?.replace(/vivid-typing_move|vivid-typing_tag$/g, '') as string
         el.removeAttribute('class')
         el.setAttribute('class', attributes)
