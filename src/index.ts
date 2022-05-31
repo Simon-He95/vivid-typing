@@ -102,17 +102,18 @@ export const VividTyping = defineComponent({
     const y = ref<number>(0);
     let timers: any[] = []
     let preContent: string | unknown[] = ''
+    const duration = ref<number>(props.interval)
     onBeforeMount(insertStyle)
 
     onMounted(() => {
-      initData(props, types, x, y, timers, preContent as string, vividTypingEl)
+      initData(props, types, x, y, timers, preContent as string, vividTypingEl, duration)
       preContent = props.content as string
       watch(props, (newProps: any) => {
         timers.forEach(timer => clearTimeout(timer))
         if (typeof newProps.content === 'string')
-          deleteModel(types, newProps, x, y, timers, preContent as string, vividTypingEl)
+          deleteModel(types, newProps, x, y, timers, preContent as string, vividTypingEl, duration)
         else
-          initData(newProps, types, x, y, timers, preContent as string, vividTypingEl)
+          initData(newProps, types, x, y, timers, preContent as string, vividTypingEl, duration)
         preContent = props.content
       })
     })
@@ -124,21 +125,22 @@ export const VividTyping = defineComponent({
       class: "vivid-typing_class",
       ref: vividTypingEl,
       style: {
-        'white-space': 'nowrap',
         'transform': `translate3d(${x.value}%,${y.value}%,0)`,
+        transition: `transform ${duration.value}ms linear`,
+        "word-break": "break-word"
       }
     })
   }
 })
 
-function initData(props: any, types: Ref<string>, x: Ref<number>, y: Ref<number>, timers: any[], preContent: string, vividTypingEl: Ref<HTMLElement | undefined>) {
+function initData(props: any, types: Ref<string>, x: Ref<number>, y: Ref<number>, timers: any[], preContent: string, vividTypingEl: Ref<HTMLElement | undefined>, duration: Ref<number>) {
   let { delay, content } = props;
   const copyContent = content
   timers.length = 0
-  setTimeout(() => updateContext(props, types, copyContent, x, y, timers, preContent, vividTypingEl), delay);
+  setTimeout(() => updateContext(props, types, copyContent, x, y, timers, preContent, vividTypingEl, duration), delay);
 }
 
-function deleteModel(types: Ref<string>, newProps: defaultProps, x: Ref<number>, y: Ref<number>, timers: any[], preContent: string, vividTypingEl: Ref<HTMLElement | undefined>) {
+function deleteModel(types: Ref<string>, newProps: defaultProps, x: Ref<number>, y: Ref<number>, timers: any[], preContent: string, vividTypingEl: Ref<HTMLElement | undefined>, duration: Ref<number>) {
   let { content, interval, spiltTag, } = newProps
   if (types.value.length > 0 && content.indexOf(preContent) !== 0) {
     preContent = preContent.substring(0, preContent.length - 1)
@@ -147,16 +149,16 @@ function deleteModel(types: Ref<string>, newProps: defaultProps, x: Ref<number>,
     } else
       types.value = types.value.substring(0, types.value.length - 1)
     setTimeout(() => {
-      deleteModel(types, newProps, x, y, timers, preContent, vividTypingEl)
+      deleteModel(types, newProps, x, y, timers, preContent, vividTypingEl, duration)
     }, interval)
   } else if (content.indexOf(preContent) === 0) {
-    initData(newProps, types, x, y, timers, preContent, vividTypingEl)
+    initData(newProps, types, x, y, timers, preContent, vividTypingEl, duration)
   }
 }
 
 
 
-function updateContext(props: defaultProps, types: Ref, copyContent: string, x: Ref<number>, y: Ref<number>, timers: any[], preContent: string, vividTypingEl: Ref<HTMLElement | undefined>) {
+function updateContext(props: defaultProps, types: Ref, copyContent: string, x: Ref<number>, y: Ref<number>, timers: any[], preContent: string, vividTypingEl: Ref<HTMLElement | undefined>, duration: Ref<number>) {
   let currentIndex = -1
   let {
     interval,
@@ -198,13 +200,24 @@ function updateContext(props: defaultProps, types: Ref, copyContent: string, x: 
       el.setAttribute('class', attributes)
       const ratio = 51 + Math.floor((el.offsetWidth / vividTypingEl.value?.offsetWidth!) * 50)
       if (reverse) {
-        if (x.value > ratio)
+        if (x.value > ratio) {
+          console.log('22')
+          duration.value = 0
           x.value = -ratio
+          setTimeout(() => {
+            duration.value = props.interval
+          }, 100)
+        }
         else
           x.value = x.value + speed
       } else {
-        if (x.value < -ratio)
+        if (x.value < -ratio) {
+          duration.value = 0
           x.value = ratio
+          setTimeout(() => {
+            duration.value = props.interval
+          }, 100)
+        }
         else
           x.value = x.value - speed
       }
@@ -222,13 +235,23 @@ function updateContext(props: defaultProps, types: Ref, copyContent: string, x: 
       el.setAttribute('class', attributes)
       const ratio = 51 + Math.floor((el.offsetHeight / vividTypingEl.value?.offsetHeight!) * 50)
       if (reverse) {
-        if (y.value < -ratio)
+        if (y.value < -ratio) {
+          duration.value = 0
           y.value = ratio
+          setTimeout(() => {
+            duration.value = props.interval
+          }, 100)
+        }
         else
           y.value = y.value - speed
       } else {
-        if (y.value > ratio)
+        if (y.value > ratio) {
+          duration.value = 0
           y.value = -ratio
+          setTimeout(() => {
+            duration.value = props.interval
+          }, 100)
+        }
         else
           y.value = y.value + speed
       }
@@ -256,7 +279,8 @@ function updateContext(props: defaultProps, types: Ref, copyContent: string, x: 
         const el = vividTypingEl.value?.childNodes[vividTypingEl.value?.childNodes.length - 1] as HTMLElement
         if (!el)
           return
-        const attributes = el.getAttribute('class')?.replace(/vivid-typing_move|vivid-typing_tag/g, '') as string
+        console.log('22')
+        const attributes = el.getAttribute('class')?.replace(/vivid-typing_move|vivid-typing_tag$/g, '') as string
         el.removeAttribute('class')
         el.setAttribute('class', attributes)
       })

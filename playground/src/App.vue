@@ -57,27 +57,29 @@
       animate-fade-out
     >
     </vivid-typing>
-    <vivid-typing
-      h-20
-      :interval="500"
-      flex="~"
-      spilt-tag="span"
-      :content="Animals"
-      spilt-class="animate-bounce animate-duration-500"
-      :spilt-style="AnimalstyleFn"
-      text-5xl
-      m-y-10
-      justify-center
-      items-center
-      :stable="true"
-      :infinity="true"
-    >
-    </vivid-typing>
+    <div overflow-hidden>
+      <vivid-typing
+        h-20
+        :interval="500"
+        flex="~"
+        spilt-tag="span"
+        :content="Animals"
+        spilt-class="animate-bounce animate-duration-500"
+        :spilt-style="AnimalstyleFn"
+        text-5xl
+        m-y-10
+        justify-center
+        items-center
+        :stable="true"
+        :infinity="true"
+      >
+      </vivid-typing>
+    </div>
 
     <vivid-typing
       :content="content1"
-      :speed="1"
       m-t-2
+      :interval="200"
       spiltTag="span"
       style="box-shadow: 0 0 10px rgba(255, 255, 255, 0.5)"
       :spilt-style="styleFn"
