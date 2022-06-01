@@ -3,46 +3,50 @@ import { h, defineComponent, ref, watch, onBeforeMount, onMounted } from "vue";
 import type { Ref, } from "vue";
 
 
-function insertStyle() {
-  if (document.querySelector('#vivid-typing-style') !== null) return
-  const style = document.createElement('style')
-  style.setAttribute('type', 'text/css')
-  style.id = 'vivid-typing-style'
-  style.innerHTML = `
-  .vivid-typing_tagClass, .vivid-typing_class, .vivid-typing_tag{
-    position:relative
-  }
-  .vivid-typing_tagClass.vivid-typing_move:last-child:after{
-    content:"|";
-    position:absolute;
-    width:1px;
-    top:50%;
-    transform:translateY(-50%);
-    right:0;
-    animation:twinkle 0.5s infinite alternate;
-  }
-  
-  .vivid-typing_tag:after{
-    content:"|";
-    position:absolute;
-    width:1px;
-    top:50%;
-    transform:translateY(-50%);
-    right:-0.5rem;
-    animation:twinkle 0.5s infinite alternate;
-  }
-  
-  @keyframes twinkle{
-    0%{
-      opacity:0
+
+try {
+  (function insertStyle() {
+    const style = document.createElement('style')
+    style.setAttribute('type', 'text/css')
+    style.id = 'vivid-typing-style'
+    style.innerHTML = `
+    .vivid-typing_tagClass, .vivid-typing_class, .vivid-typing_tag{
+      position:relative
     }
-    100%{
-      opacity:100%
+    .vivid-typing_tagClass.vivid-typing_move:last-child:after{
+      content:"|";
+      position:absolute;
+      width:1px;
+      top:50%;
+      transform:translateY(-50%);
+      right:0;
+      animation:twinkle 0.5s infinite alternate;
     }
-  }
-  
-  `
-  document.head.appendChild(style)
+    
+    .vivid-typing_tag:after{
+      content:"|";
+      position:absolute;
+      width:1px;
+      top:50%;
+      transform:translateY(-50%);
+      right:-0.5rem;
+      animation:twinkle 0.5s infinite alternate;
+    }
+    
+    @keyframes twinkle{
+      0%{
+        opacity:0
+      }
+      100%{
+        opacity:100%
+      }
+    }
+    
+    `
+    document.head.appendChild(style)
+  })()
+} catch (error) {
+
 }
 
 export const VividTyping = defineComponent({
@@ -103,7 +107,6 @@ export const VividTyping = defineComponent({
     let timers: any[] = []
     let preContent: string | unknown[] = ''
     const duration = ref<number>(props.interval)
-    onBeforeMount(insertStyle)
 
     onMounted(() => {
       initData(props, types, x, y, timers, preContent as string, vividTypingEl, duration)
@@ -155,7 +158,6 @@ function deleteModel(types: Ref<string>, newProps: defaultProps, x: Ref<number>,
     initData(newProps, types, x, y, timers, preContent, vividTypingEl, duration)
   }
 }
-
 
 
 function updateContext(props: defaultProps, types: Ref, copyContent: string, x: Ref<number>, y: Ref<number>, timers: any[], preContent: string, vividTypingEl: Ref<HTMLElement | undefined>, duration: Ref<number>) {
