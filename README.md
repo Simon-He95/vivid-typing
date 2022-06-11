@@ -47,3 +47,6 @@ type defaultProps = {
 }
 
 ```
+
+## Feature
+- support use <strong><em>\n</em></strong> to split content
