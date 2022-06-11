@@ -72,7 +72,7 @@ function AnimalstyleFn(i) {
       m-y-5
       :stable="true"
     />
-    <vivid-typing
+    <!-- <vivid-typing
       :interval="200"
       :delay="0"
       spilt-tag="span"
@@ -151,7 +151,7 @@ function AnimalstyleFn(i) {
       style="box-shadow: 0 0 10px rgba(255, 255, 255, 0.5)"
       :spilt-style="styleFn"
       :finish="finish1"
-    />
+    /> -->
 
     <Footer />
   </main>

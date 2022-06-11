@@ -1,4 +1,4 @@
-import { defineComponent, h, onMounted, ref, watch } from 'vue'
+import { defineComponent, h, ref, watch } from 'vue'
 import type { DefineComponent, Ref } from 'vue'
 import type { defaultProps } from './type'
 
@@ -114,21 +114,19 @@ export const VividTyping = defineComponent({
     let preContent: string | unknown[] = ''
     const duration = ref<number>(props.interval)
 
-    onMounted(() => {
-      initData(props, types, x, y, timers, preContent as string, vividTypingEl, duration)
-      preContent = props.content as string
-      watch(props, (newProps: any) => {
-        timers.forEach(timer => clearTimeout(timer))
-        if (typeof newProps.content === 'string')
-          deleteModel(types, newProps, x, y, timers, preContent as string, vividTypingEl, duration)
-        else
-          initData(newProps, types, x, y, timers, preContent as string, vividTypingEl, duration)
-        preContent = props.content
-      })
+    initData(props, types, x, y, timers, preContent as string, vividTypingEl, duration)
+    preContent = props.content
+    watch(props, (newProps: any) => {
+      timers.forEach(timer => clearTimeout(timer))
+      if (typeof newProps.content === 'string')
+        deleteModel(types, newProps, x, y, timers, preContent, vividTypingEl, duration)
+      else
+        initData(newProps, types, x, y, timers, preContent, vividTypingEl, duration)
+      preContent = props.content
     })
 
     return () => h('div', {
-      innerHTML: props.spiltTag || Array.isArray(props.content)
+      innerHTML: props.spiltTag || isArray(props.content)
         ? types.value
         : `<span class="vivid-typing_tag">${types.value}</span>`,
       class: 'vivid-typing_class',
@@ -142,14 +140,14 @@ export const VividTyping = defineComponent({
   },
 }) as DefineComponent<defaultProps>
 
-function initData(props: any, types: Ref<string>, x: Ref<number>, y: Ref<number>, timers: any[], preContent: string, vividTypingEl: Ref<HTMLElement | undefined>, duration: Ref<number>) {
+function initData(props: any, types: Ref<string>, x: Ref<number>, y: Ref<number>, timers: any[], preContent: string | unknown[], vividTypingEl: Ref<HTMLElement | undefined>, duration: Ref<number>) {
   const { delay, content } = props
   const copyContent = content
   timers.length = 0
   setTimeout(() => updateContext(props, types, copyContent, x, y, timers, preContent, vividTypingEl, duration), delay)
 }
 
-function deleteModel(types: Ref<string>, newProps: defaultProps, x: Ref<number>, y: Ref<number>, timers: any[], preContent: string, vividTypingEl: Ref<HTMLElement | undefined>, duration: Ref<number>) {
+function deleteModel(types: Ref<string>, newProps: defaultProps, x: Ref<number>, y: Ref<number>, timers: any[], preContent: string | unknown[], vividTypingEl: Ref<HTMLElement | undefined>, duration: Ref<number>) {
   const { content, interval, spiltTag } = newProps
   if (types.value.length > 0 && content.indexOf(preContent) !== 0) {
     preContent = preContent.substring(0, preContent.length - 1)
@@ -166,7 +164,7 @@ function deleteModel(types: Ref<string>, newProps: defaultProps, x: Ref<number>,
   }
 }
 
-function updateContext(props: defaultProps, types: Ref, copyContent: string, x: Ref<number>, y: Ref<number>, timers: any[], preContent: string, vividTypingEl: Ref<HTMLElement | undefined>, duration: Ref<number>) {
+function updateContext(props: defaultProps, types: Ref, copyContent: string, x: Ref<number>, y: Ref<number>, timers: any[], preContent: string | unknown[], vividTypingEl: Ref<HTMLElement | undefined>, duration: Ref<number>) {
   let currentIndex = -1
   const {
     interval,
@@ -183,15 +181,19 @@ function updateContext(props: defaultProps, types: Ref, copyContent: string, x: 
     tail,
   } = props
   let { content } = props
-  if (!Array.isArray(content))
+  if (!isArray(content))
     content = content.toString()
 
-  if (typeof content === 'string' && content.indexOf(preContent) === 0)
-    content = content.substring(preContent.length)
+  if (isStr(content) && isStr(preContent) && content.indexOf(preContent as string) === 0)
+    content = (content as string).substring(preContent.length)
 
-  dfs()
+  return dfs()
   function dfs() {
     currentIndex++
+    if (content[0] === '\\' && content[1] === 'n') {
+      types.value += '<br>'
+      content = content.slice(2)
+    }
     if (spiltTag)
       types.value += spiltContent(content[0], spiltTag, spiltClass, spiltStyle, currentIndex, tail)
     else if (content.length)
@@ -320,4 +322,12 @@ function findSplitLast(content: string, spiltTag: string) {
 function spiltContent(content: string, spiltTag: string, spiltClass: string | undefined, spiltStyle: string | Function | undefined, currentIndex: number, tail: boolean) {
   return `<${spiltTag}  class="vivid-typing_tagClass${tail ? ' vivid-typing_move' : ''} ${spiltClass || ''}" style="${spiltStyle ? typeof spiltStyle === 'function' ? spiltStyle(currentIndex) : spiltStyle : ''
     }">${content}</${spiltTag}>`
+}
+
+function isStr(str: any): boolean {
+  return typeof str === 'string'
+}
+
+function isArray(arr: any): boolean {
+  return Array.isArray(arr)
 }
