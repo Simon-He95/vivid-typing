@@ -1,50 +1,55 @@
 import { defineComponent, h, onMounted, ref, watch } from 'vue'
 import type { DefineComponent, Ref } from 'vue'
-import type { defaultProps } from './type';
+import type { defaultProps } from './type'
 
-(function insertStyle() {
-  const style = document.createElement('style')
-  style.setAttribute('type', 'text/css')
-  style.id = 'vivid-typing-style'
-  style.innerHTML = `
-    .vivid-typing_tagClass, .vivid-typing_class, .vivid-typing_tag{
-      position:relative
-    }
-    .vivid-typing_tagClass.vivid-typing_move:last-child:after{
-      content:"|";
-      position:absolute;
-      width:1px;
-      top:50%;
-      transform:translateY(-50%);
-      right:-0.25rem;
-      color:darkgray;
-      animation:twinkle 0.5s infinite alternate;
-    }
-    
-    .vivid-typing_tag:after{
-      content:"|";
-      position:absolute;
-      width:1px;
-      top:50%;
-      transform:translateY(-50%);
-      right:-0.25rem;
-      color:darkgray;
-      font-size:1rem;
-      animation:twinkle 0.5s infinite alternate;
-    }
-    
-    @keyframes twinkle{
-      0%{
-        opacity:0
+try {
+  (function insertStyle() {
+    const style = document.createElement('style')
+    style.setAttribute('type', 'text/css')
+    style.id = 'vivid-typing-style'
+    style.innerHTML = `
+      .vivid-typing_tagClass, .vivid-typing_class, .vivid-typing_tag{
+        position:relative
       }
-      100%{
-        opacity:100%
+      .vivid-typing_tagClass.vivid-typing_move:last-child:after{
+        content:"|";
+        position:absolute;
+        width:1px;
+        top:50%;
+        transform:translateY(-50%);
+        right:-0.25rem;
+        color:darkgray;
+        animation:twinkle 0.5s infinite alternate;
       }
-    }
-    
-    `
-  document.head.appendChild(style)
-})()
+      
+      .vivid-typing_tag:after{
+        content:"|";
+        position:absolute;
+        width:1px;
+        top:50%;
+        transform:translateY(-50%);
+        right:-0.25rem;
+        color:darkgray;
+        font-size:1rem;
+        animation:twinkle 0.5s infinite alternate;
+      }
+      
+      @keyframes twinkle{
+        0%{
+          opacity:0
+        }
+        100%{
+          opacity:100%
+        }
+      }
+      
+      `
+    document.head.appendChild(style)
+  })()
+}
+catch (error) {
+
+}
 
 export const VividTyping = defineComponent({
   props: {
