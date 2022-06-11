@@ -3,7 +3,7 @@
 [online](http://vivid-typing.hejian.club/)
 
 
-# start
+# Start
 
 ```bash
 
@@ -18,14 +18,14 @@
   app.mount('#app')
 ```
 
-# usage
+# Usage
 
 ```markdown
   <vivid-typing :interval="100" :delay="0" h-10 content="hi"></vivid-typing>
 ```
  ## 更多使用技巧可以参考[Page](https://github.com/Simon-He95/vivid-typing/blob/master/playground/src/App.vue)
 
-# api guide
+# API Guide
 
 ```markdown
 
@@ -43,6 +43,7 @@ type defaultProps = {
   scrollY: boolean // 实现一个纵向通知栏的效果(注意实现demo效果需要外层嵌套一个div加上overflow:hidden)
   speed: number // 控制滚动的速度
   reverse: boolean // 翻转scrollX和scrollY的方向默认false,向下或向左
+  tail: boolean // 默认true展示结尾的闪烁动画，如果为false，则不展示
 }
 
 ```

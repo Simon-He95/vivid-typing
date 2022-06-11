@@ -1,4 +1,4 @@
-export type defaultProps = {
+export interface defaultProps {
   interval: number
   delay: number
   infinity: boolean | undefined
@@ -12,4 +12,5 @@ export type defaultProps = {
   scrollY: boolean
   speed: number
   reverse: boolean
+  tail: boolean
 }

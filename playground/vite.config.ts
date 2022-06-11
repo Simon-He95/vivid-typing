@@ -10,7 +10,7 @@ import Unocss from 'unocss/vite'
 import UnocssIcons from '@unocss/preset-icons'
 
 export default defineConfig({
-  base: "./",
+  base: './',
   resolve: {
     alias: {
       '~/': `${path.resolve(__dirname, 'src')}/`,
@@ -48,8 +48,8 @@ export default defineConfig({
           // options
           prefix: 'i-',
           extraProperties: {
-            display: 'inline-block'
-          }
+            display: 'inline-block',
+          },
         }),
         // presetUno() - if you want to use other atomic CSS as well
       ],
