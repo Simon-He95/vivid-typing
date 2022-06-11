@@ -149,8 +149,8 @@ function initData(props: any, types: Ref<string>, x: Ref<number>, y: Ref<number>
 
 function deleteModel(types: Ref<string>, newProps: defaultProps, x: Ref<number>, y: Ref<number>, timers: any[], preContent: string | unknown[], vividTypingEl: Ref<HTMLElement | undefined>, duration: Ref<number>) {
   const { content, interval, spiltTag } = newProps
-  if (types.value.length > 0 && content.indexOf(preContent) !== 0) {
-    preContent = preContent.substring(0, preContent.length - 1)
+  if (isStr(content) && isStr(preContent) && types.value.length > 0 && content.indexOf(preContent as string) !== 0) {
+    preContent = (preContent as string).substring(0, preContent.length - 1)
     if (spiltTag)
       types.value = findSplitLast(types.value, spiltTag)
     else
@@ -159,7 +159,7 @@ function deleteModel(types: Ref<string>, newProps: defaultProps, x: Ref<number>,
       deleteModel(types, newProps, x, y, timers, preContent, vividTypingEl, duration)
     }, interval)
   }
-  else if (content.indexOf(preContent) === 0) {
+  else if (isArray(content) || isArray(preContent) || content.indexOf(preContent as string) === 0) {
     initData(newProps, types, x, y, timers, preContent, vividTypingEl, duration)
   }
 }
