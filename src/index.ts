@@ -150,15 +150,13 @@ function initData(props: any, types: Ref<string>, x: Ref<number>, y: Ref<number>
 function deleteModel(types: Ref<string>, newProps: defaultProps, x: Ref<number>, y: Ref<number>, timers: any[], preContent: string | unknown[], vividTypingEl: Ref<HTMLElement | undefined>, duration: Ref<number>) {
   const { content, interval, spiltTag } = newProps
   if (isStr(content) && isStr(preContent) && types.value.length > 0 && content.indexOf(preContent as string) !== 0) {
-    debugger
     const len = preContent.length - 1
     if (preContent[len] === '>' && preContent[len - 1] === '%' && preContent[len - 2] === '/') {
       const _index = preContent.indexOf('<%>')
-      if (_index >= 0) {
+      if (_index >= 0)
         types.value = types.value.substring(0, _index + 1)
-      } else {
-        throw Error('<%>标签不匹配')
-      }
+      else
+        throw new Error('<%>标签不匹配')
     }
     preContent = (preContent as string).substring(0, preContent.length - 1)
     if (spiltTag)
