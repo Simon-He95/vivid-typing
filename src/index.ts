@@ -194,6 +194,16 @@ function updateContext(props: defaultProps, types: Ref, copyContent: string, x: 
       types.value += '<br>'
       content = content.slice(2)
     }
+    if (content[0] === '<' && content[1] === '%' && content[2] === '>') {
+      const _index = content.indexOf('</%>')
+      if (_index > 0) {
+        types.value += content.slice(3, _index)
+        content = content.slice(_index + 4)
+      }
+      else {
+        throw new Error('<%>标签不匹配')
+      }
+    }
     if (spiltTag)
       types.value += spiltContent(content[0], spiltTag, spiltClass, spiltStyle, currentIndex, tail)
     else if (content.length)
