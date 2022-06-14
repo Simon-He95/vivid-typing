@@ -151,6 +151,7 @@ function deleteModel(types: Ref<string>, newProps: defaultProps, x: Ref<number>,
   const { content, interval, spiltTag } = newProps
   if (isStr(content) && isStr(preContent) && types.value.length > 0 && content.indexOf(preContent as string) !== 0) {
     const len = preContent.length - 1
+
     if (preContent[len] === '>' && preContent[len - 1] === '%' && preContent[len - 2] === '/') {
       const _index = preContent.indexOf('<%>')
       if (_index >= 0)
@@ -158,11 +159,18 @@ function deleteModel(types: Ref<string>, newProps: defaultProps, x: Ref<number>,
       else
         throw new Error('<%>标签不匹配')
     }
-    preContent = (preContent as string).substring(0, preContent.length - 1)
-    if (spiltTag)
-      types.value = findSplitLast(types.value, spiltTag)
-    else
-      types.value = types.value.substring(0, types.value.length - 1)
+    if (preContent[len] === 'n' && preContent[len - 1] === '\\') {
+      types.value = types.value.slice(0, -4)
+      preContent = (preContent as string).slice(0, -2)
+    }
+    else {
+      preContent = (preContent as string).substring(0, preContent.length - 1)
+      if (spiltTag)
+        types.value = findSplitLast(types.value, spiltTag)
+      else
+        types.value = types.value.substring(0, types.value.length - 1)
+    }
+
     setTimeout(() => {
       deleteModel(types, newProps, x, y, timers, preContent, vividTypingEl, duration)
     }, interval)
