@@ -1,4 +1,5 @@
 import { defineComponent, h, ref, watch } from 'vue'
+import { animationFrameWrapper } from 'simon-js-tool'
 import type { DefineComponent, Ref } from 'vue'
 import type { defaultProps } from './type'
 
@@ -144,7 +145,10 @@ function initData(props: any, types: Ref<string>, x: Ref<number>, y: Ref<number>
   const { delay, content } = props
   const copyContent = content
   timers.length = 0
-  setTimeout(() => updateContext(props, types, copyContent, x, y, timers, preContent, vividTypingEl, duration), delay)
+  const stop = animationFrameWrapper(() => {
+    stop()
+    updateContext(props, types, copyContent, x, y, timers, preContent, vividTypingEl, duration)
+  }, delay)
 }
 
 function deleteModel(types: Ref<string>, newProps: defaultProps, x: Ref<number>, y: Ref<number>, timers: any[], preContent: string | unknown[], vividTypingEl: Ref<HTMLElement | undefined>, duration: Ref<number>) {
@@ -171,7 +175,8 @@ function deleteModel(types: Ref<string>, newProps: defaultProps, x: Ref<number>,
         types.value = types.value.substring(0, types.value.length - 1)
     }
 
-    setTimeout(() => {
+    const stop = animationFrameWrapper(() => {
+      stop()
       deleteModel(types, newProps, x, y, timers, preContent, vividTypingEl, duration)
     }, interval)
   }
@@ -228,8 +233,10 @@ function updateContext(props: defaultProps, types: Ref, copyContent: string, x: 
     if (content.length)
       content = content.slice(1)
     if (content.length !== 0) {
-      const timer = setTimeout(dfs, interval)
-      timers.push(timer)
+      const stop = animationFrameWrapper(() => {
+        dfs()
+        stop()
+      }, interval)
     }
     else if (scrollX) {
       const el = vividTypingEl.value?.childNodes[0] as HTMLElement
@@ -245,7 +252,8 @@ function updateContext(props: defaultProps, types: Ref, copyContent: string, x: 
         if (x.value > ratio) {
           duration.value = 0
           x.value = -ratio
-          setTimeout(() => {
+          const stop = animationFrameWrapper(() => {
+            stop()
             duration.value = props.interval
           }, 100)
         }
@@ -255,17 +263,18 @@ function updateContext(props: defaultProps, types: Ref, copyContent: string, x: 
         if (x.value < -ratio) {
           duration.value = 0
           x.value = ratio
-          setTimeout(() => {
+          const stop = animationFrameWrapper(() => {
+            stop()
             duration.value = props.interval
           }, 100)
         }
         else { x.value = x.value - speed }
       }
 
-      const timer = setTimeout(() => {
+      const stop = animationFrameWrapper(() => {
+        stop()
         dfs()
       }, interval)
-      timers.push(timer)
     }
     else if (scrollY) {
       const el = vividTypingEl.value?.childNodes[0] as HTMLElement
@@ -282,7 +291,8 @@ function updateContext(props: defaultProps, types: Ref, copyContent: string, x: 
         if (y.value < -ratio) {
           duration.value = 0
           y.value = ratio
-          setTimeout(() => {
+          const stop = animationFrameWrapper(() => {
+            stop()
             duration.value = props.interval
           }, 100)
         }
@@ -292,36 +302,39 @@ function updateContext(props: defaultProps, types: Ref, copyContent: string, x: 
         if (y.value > ratio) {
           duration.value = 0
           y.value = -ratio
-          setTimeout(() => {
+          const stop = animationFrameWrapper(() => {
+            stop()
             duration.value = props.interval
           }, 100)
         }
         else { y.value = y.value + speed }
       }
 
-      const timer = setTimeout(() => {
+      const stop = animationFrameWrapper(() => {
+        stop()
         dfs()
       }, interval)
-      timers.push(timer)
     }
     else if (infinity) {
       currentIndex = 0
       if (!stable) {
-        setTimeout(() => {
+        const stop = animationFrameWrapper(() => {
+          stop()
           types.value = ''
         }, 100)
       }
 
-      const timer = setTimeout(() => {
+      const stop = animationFrameWrapper(() => {
+        stop()
         if (stable)
           types.value = ''
         content = copyContent
         dfs()
       }, interval)
-      timers.push(timer)
     }
     else {
-      setTimeout(() => {
+      const stop = animationFrameWrapper(() => {
+        stop()
         const el = vividTypingEl.value?.childNodes[vividTypingEl.value?.childNodes.length - 1] as HTMLElement
         if (!el)
           return
@@ -330,7 +343,8 @@ function updateContext(props: defaultProps, types: Ref, copyContent: string, x: 
         el.setAttribute('class', attributes)
       })
 
-      setTimeout(() => {
+      const stop2 = animationFrameWrapper(() => {
+        stop2()
         finish && finish()
       }, interval)
     }

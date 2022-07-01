@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { animationFrameWrapper } from 'simon-js-tool'
 const n = ref(2)
 const content1 = ref('你好鸭~')
 const contentList = [
@@ -14,8 +15,9 @@ function finish1() {
   if (index.value < contentList.length - 1)
     index.value++
   else index.value = 0
-  setTimeout(() => {
+  const stop = animationFrameWrapper(() => {
     content1.value = contentList[index.value]
+    stop()
   }, 500)
 }
 const red
@@ -59,7 +61,7 @@ function AnimalstyleFn(i) {
 </script>
 
 <template>
-  <main font-sans p="x-4 y-10" text="center gray-700 dark:gray-200" box-content>
+  <main font-sans p=" y-10" text="center gray-700 dark:gray-200" box-content>
     <vivid-typing
       :interval="200"
       :delay="0"
@@ -69,7 +71,7 @@ function AnimalstyleFn(i) {
       :spilt-style="styleFn"
       content="Vivid Typing"
       text-5xl
-      m-y-5
+      m-y-10
       :stable="true"
     />
     <vivid-typing
