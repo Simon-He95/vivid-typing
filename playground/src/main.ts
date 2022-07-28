@@ -9,5 +9,5 @@ import 'uno.css'
 // import { VividTyping } from 'vivid-typing'
 
 const app = createApp(App)
-app.component('vivid-typing', VividTyping)
+app.component('VividTyping', VividTyping)
 app.mount('#app')
