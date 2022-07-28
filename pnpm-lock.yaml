@@ -16,7 +16,7 @@ importers:
       esno: ^0.16.3
       pkgroll: ^1.3.1
       pnpm: ^6.32.3
-      simon-js-tool: ^4.0.8
+      simon-js-tool: ^4.0.10
       typescript: ^4.6.2
       unplugin-vue-components: ^0.18.0
       vite: ^2.8.6
@@ -42,7 +42,7 @@ importers:
       esno: 0.16.3
       pkgroll: 1.3.1_typescript@4.6.2
       pnpm: 6.32.3
-      simon-js-tool: 4.0.8
+      simon-js-tool: 4.0.10
       typescript: 4.6.2
       unplugin-vue-components: 0.18.0_vite@2.8.6+vue@3.2.31
       vite: 2.8.6
@@ -3707,8 +3707,8 @@ packages:
     resolution: {integrity: sha512-sDl4qMFpijcGw22U5w63KmD3cZJfBuFlVNbVMKje2keoKML7X2UzWbc4XrmEbDwg0NXJc3yv4/ox7b+JWb57kQ==}
     dev: true
 
-  /simon-js-tool/4.0.8:
-    resolution: {integrity: sha512-jQYrrmShAuvbT8R/Ruyyy/iqoMItzhwV3dXJu0dgM2fcWZn6lFCPta/WJiFVeydWI7kW8a8M5DqRmRBqWYbmWQ==}
+  /simon-js-tool/4.0.10:
+    resolution: {integrity: sha512-Az8ZPBHG0w8o8d4TPapAvObOksMZqO/8+u/I0HdcJL5b1zDEPWsPUnUHt5qzWj0qW0ghmszrDlyi+QKCWum0Aw==}
     dependencies:
       '@vueuse/core': 8.1.1_vue@3.2.37
       vue: 3.2.37
