@@ -1,5 +1,6 @@
 import { createApp } from 'vue'
-import { VividTyping } from './../../src/index'
+// import { VividTyping } from './../../src'
+import { VividTyping } from 'vivid-typing'
 import App from './App.vue'
 
 import '@unocss/reset/tailwind.css'
@@ -8,5 +9,5 @@ import 'uno.css'
 // import { VividTyping } from 'vivid-typing'
 
 const app = createApp(App)
-app.component('VividTyping', VividTyping)
+app.component('vivid-typing', VividTyping)
 app.mount('#app')

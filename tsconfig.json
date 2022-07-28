@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "esnext",
-    "module": "esnext",
+    "module": "commonjs",
     "lib": [
       "esnext",
       "DOM"
@@ -13,11 +13,11 @@
     "strictNullChecks": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
-    "skipDefaultLibCheck": true
+    "skipDefaultLibCheck": true,
+    "sourceMap": true
   },
   "exclude": [
     "dist",
-    "playground",
-    "src/index.css"
+    "playground"
   ]
 }
