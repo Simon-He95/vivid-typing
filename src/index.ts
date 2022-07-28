@@ -173,8 +173,7 @@ function deleteModel(types: Ref<string>, newProps: defaultProps, x: Ref<number>,
     }
     animationFrameWrapper(() => deleteModel(types, newProps, x, y, timers, preContent, vividTypingEl, duration), interval, true)
   }
-  else if (isArray(content) || isArray(preContent) || content.indexOf(preContent as string) === 0)
-    initData(newProps, types, x, y, timers, preContent, vividTypingEl, duration)
+  else if (isArray(content) || isArray(preContent) || content.indexOf(preContent as string) === 0) { initData(newProps, types, x, y, timers, preContent, vividTypingEl, duration) }
 }
 
 function updateContext(props: defaultProps, types: Ref, copyContent: string, x: Ref<number>, y: Ref<number>, timers: any[], preContent: string | unknown[], vividTypingEl: Ref<HTMLElement | undefined>, duration: Ref<number>) {
@@ -224,8 +223,7 @@ function updateContext(props: defaultProps, types: Ref, copyContent: string, x: 
 
     if (content.length)
       content = content.slice(1)
-    if (content.length !== 0)
-      animationFrameWrapper(dfs, interval, true)
+    if (content.length !== 0) { animationFrameWrapper(dfs, interval, true) }
     else if (scrollX) {
       const el = vividTypingEl.value?.childNodes[0] as HTMLElement
       if (!el)
@@ -242,7 +240,7 @@ function updateContext(props: defaultProps, types: Ref, copyContent: string, x: 
           x.value = -ratio
           animationFrameWrapper(() => duration.value = props.interval, 100, true)
         }
-        else x.value = x.value + speed
+        else { x.value = x.value + speed }
       }
       else {
         if (x.value < -ratio) {
@@ -250,7 +248,7 @@ function updateContext(props: defaultProps, types: Ref, copyContent: string, x: 
           x.value = ratio
           animationFrameWrapper(() => duration.value = props.interval, 100, true)
         }
-        else x.value = x.value - speed
+        else { x.value = x.value - speed }
       }
 
       animationFrameWrapper(dfs, interval, true)
@@ -272,7 +270,7 @@ function updateContext(props: defaultProps, types: Ref, copyContent: string, x: 
           y.value = ratio
           animationFrameWrapper(() => duration.value = props.interval, 100, true)
         }
-        else y.value = y.value - speed
+        else { y.value = y.value - speed }
       }
       else {
         if (y.value > ratio) {
@@ -280,7 +278,7 @@ function updateContext(props: defaultProps, types: Ref, copyContent: string, x: 
           y.value = -ratio
           animationFrameWrapper(() => duration.value = props.interval, 100, true)
         }
-        else y.value = y.value + speed
+        else { y.value = y.value + speed }
       }
       animationFrameWrapper(dfs, interval, true)
     }
