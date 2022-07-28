@@ -61,7 +61,7 @@ function AnimalstyleFn(i) {
 
 <template>
   <main font-sans p=" y-10" text="center gray-700 dark:gray-200" box-content>
-    <!-- <vivid-typing
+    <vivid-typing
       :interval="200"
       :delay="0"
       :infinity="true"
@@ -152,11 +152,17 @@ function AnimalstyleFn(i) {
       style="box-shadow: 0 0 10px rgba(255, 255, 255, 0.5)"
       :spilt-style="styleFn"
       :finish="finish1"
-    /> -->
+    />
     <vivid-typing
       spilt-tag="span"
       content="Hey, I am Simon He, a fanatical programmers located  in <%><span i-carbon-logo-github></span></%>Shanghai, <%><span inline-block i-carbon-logo-github></span></%>China."
     />
+    <vivid-typing
+      spilt-tag="span"
+      :style="{ color: isDark ? '#339933' : '#009966' }"
+      text-sm
+      content="<%><span i-ic:outline-tips-and-updates></span></%> 如果我的blog对你有帮助，请在GitHub关注我，持续更新，记得点一下<%><span i-mdi:star-face></span></%>star哦~\n 当然也欢迎踊跃的PR<%><span i-ph:smiley-wink-bold/></%>"
+    ></vivid-typing>
     <span i-carbon-logo-github hidden></span>
     <Footer />
   </main>

@@ -145,10 +145,7 @@ function initData(props: any, types: Ref<string>, x: Ref<number>, y: Ref<number>
   const { delay, content } = props
   const copyContent = content
   timers.length = 0
-  const stop = animationFrameWrapper(() => {
-    stop()
-    updateContext(props, types, copyContent, x, y, timers, preContent, vividTypingEl, duration)
-  }, delay)
+  animationFrameWrapper(() => updateContext(props, types, copyContent, x, y, timers, preContent, vividTypingEl, duration), delay, true)
 }
 
 function deleteModel(types: Ref<string>, newProps: defaultProps, x: Ref<number>, y: Ref<number>, timers: any[], preContent: string | unknown[], vividTypingEl: Ref<HTMLElement | undefined>, duration: Ref<number>) {
@@ -174,15 +171,10 @@ function deleteModel(types: Ref<string>, newProps: defaultProps, x: Ref<number>,
       else
         types.value = types.value.substring(0, types.value.length - 1)
     }
-
-    const stop = animationFrameWrapper(() => {
-      stop()
-      deleteModel(types, newProps, x, y, timers, preContent, vividTypingEl, duration)
-    }, interval)
+    animationFrameWrapper(() => deleteModel(types, newProps, x, y, timers, preContent, vividTypingEl, duration), interval, true)
   }
-  else if (isArray(content) || isArray(preContent) || content.indexOf(preContent as string) === 0) {
+  else if (isArray(content) || isArray(preContent) || content.indexOf(preContent as string) === 0)
     initData(newProps, types, x, y, timers, preContent, vividTypingEl, duration)
-  }
 }
 
 function updateContext(props: defaultProps, types: Ref, copyContent: string, x: Ref<number>, y: Ref<number>, timers: any[], preContent: string | unknown[], vividTypingEl: Ref<HTMLElement | undefined>, duration: Ref<number>) {
@@ -225,19 +217,15 @@ function updateContext(props: defaultProps, types: Ref, copyContent: string, x: 
         throw new Error('<%>标签不匹配')
       }
     }
-    if (spiltTag)
+    if (spiltTag && content.length)
       types.value += spiltContent(content[0], spiltTag, spiltClass, spiltStyle, currentIndex, tail)
     else if (content.length)
       types.value += content[0]
 
     if (content.length)
       content = content.slice(1)
-    if (content.length !== 0) {
-      const stop = animationFrameWrapper(() => {
-        dfs()
-        stop()
-      }, interval)
-    }
+    if (content.length !== 0)
+      animationFrameWrapper(dfs, interval, true)
     else if (scrollX) {
       const el = vividTypingEl.value?.childNodes[0] as HTMLElement
       if (!el)
@@ -252,29 +240,20 @@ function updateContext(props: defaultProps, types: Ref, copyContent: string, x: 
         if (x.value > ratio) {
           duration.value = 0
           x.value = -ratio
-          const stop = animationFrameWrapper(() => {
-            stop()
-            duration.value = props.interval
-          }, 100)
+          animationFrameWrapper(() => duration.value = props.interval, 100, true)
         }
-        else { x.value = x.value + speed }
+        else x.value = x.value + speed
       }
       else {
         if (x.value < -ratio) {
           duration.value = 0
           x.value = ratio
-          const stop = animationFrameWrapper(() => {
-            stop()
-            duration.value = props.interval
-          }, 100)
+          animationFrameWrapper(() => duration.value = props.interval, 100, true)
         }
-        else { x.value = x.value - speed }
+        else x.value = x.value - speed
       }
 
-      const stop = animationFrameWrapper(() => {
-        stop()
-        dfs()
-      }, interval)
+      animationFrameWrapper(dfs, interval, true)
     }
     else if (scrollY) {
       const el = vividTypingEl.value?.childNodes[0] as HTMLElement
@@ -291,62 +270,43 @@ function updateContext(props: defaultProps, types: Ref, copyContent: string, x: 
         if (y.value < -ratio) {
           duration.value = 0
           y.value = ratio
-          const stop = animationFrameWrapper(() => {
-            stop()
-            duration.value = props.interval
-          }, 100)
+          animationFrameWrapper(() => duration.value = props.interval, 100, true)
         }
-        else { y.value = y.value - speed }
+        else y.value = y.value - speed
       }
       else {
         if (y.value > ratio) {
           duration.value = 0
           y.value = -ratio
-          const stop = animationFrameWrapper(() => {
-            stop()
-            duration.value = props.interval
-          }, 100)
+          animationFrameWrapper(() => duration.value = props.interval, 100, true)
         }
-        else { y.value = y.value + speed }
+        else y.value = y.value + speed
       }
-
-      const stop = animationFrameWrapper(() => {
-        stop()
-        dfs()
-      }, interval)
+      animationFrameWrapper(dfs, interval, true)
     }
     else if (infinity) {
       currentIndex = 0
-      if (!stable) {
-        const stop = animationFrameWrapper(() => {
-          stop()
-          types.value = ''
-        }, 100)
-      }
+      if (!stable)
+        animationFrameWrapper(() => types.value = '', 100, true)
 
-      const stop = animationFrameWrapper(() => {
-        stop()
+      animationFrameWrapper(() => {
         if (stable)
           types.value = ''
         content = copyContent
         dfs()
-      }, interval)
+      }, interval, true)
     }
     else {
-      const stop = animationFrameWrapper(() => {
-        stop()
+      animationFrameWrapper(() => {
         const el = vividTypingEl.value?.childNodes[vividTypingEl.value?.childNodes.length - 1] as HTMLElement
         if (!el)
           return
         const attributes = el.getAttribute('class')?.replace(/vivid-typing_move|vivid-typing_tag$/g, '') as string
         el.removeAttribute('class')
         el.setAttribute('class', attributes)
-      })
+      }, 0, true)
 
-      const stop2 = animationFrameWrapper(() => {
-        stop2()
-        finish && finish()
-      }, interval)
+      animationFrameWrapper(() => finish?.(), interval, true)
     }
   }
 }
