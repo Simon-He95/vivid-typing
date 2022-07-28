@@ -1,52 +1,46 @@
 import { defineComponent, h, ref, watch } from 'vue'
-import { animationFrameWrapper } from 'simon-js-tool'
+import { animationFrameWrapper, createElement, isArray, isStr, addStyle } from 'simon-js-tool'
 import type { DefineComponent, Ref } from 'vue'
 import type { defaultProps } from './type'
 
 try {
-  (function insertStyle() {
-    const style = document.createElement('style')
-    style.setAttribute('type', 'text/css')
-    style.id = 'vivid-typing-style'
-    style.innerHTML = `
-      .vivid-typing_tagClass, .vivid-typing_class, .vivid-typing_tag{
-        position:relative
-      }
-      .vivid-typing_tagClass.vivid-typing_move:last-child:after{
-        content:"|";
-        position:absolute;
-        width:1px;
-        top:50%;
-        transform:translateY(-50%);
-        right:-0.25rem;
-        color:darkgray;
-        animation:twinkle 0.5s infinite alternate;
-      }
-      
-      .vivid-typing_tag:after{
-        content:"|";
-        position:absolute;
-        width:1px;
-        top:50%;
-        transform:translateY(-50%);
-        right:-0.25rem;
-        color:darkgray;
-        font-size:1rem;
-        animation:twinkle 0.5s infinite alternate;
-      }
-      
-      @keyframes twinkle{
-        0%{
-          opacity:0
-        }
-        100%{
-          opacity:100%
-        }
-      }
-      
-      `
-    document.head.appendChild(style)
-  })()
+  addStyle(`
+  .vivid-typing_tagClass, .vivid-typing_class, .vivid-typing_tag{
+    position:relative
+  }
+  .vivid-typing_tagClass.vivid-typing_move:last-child:after{
+    content:"|";
+    position:absolute;
+    width:1px;
+    top:50%;
+    transform:translateY(-50%);
+    right:-0.25rem;
+    color:darkgray;
+    animation:twinkle 0.5s infinite alternate;
+  }
+  
+  .vivid-typing_tag:after{
+    content:"|";
+    position:absolute;
+    width:1px;
+    top:50%;
+    transform:translateY(-50%);
+    right:-0.25rem;
+    color:darkgray;
+    font-size:1rem;
+    animation:twinkle 0.5s infinite alternate;
+  }
+  
+  @keyframes twinkle{
+    0%{
+      opacity:0
+    }
+    100%{
+      opacity:100%
+    }
+  }
+  
+  `)
 }
 catch (error) {
 
@@ -322,10 +316,4 @@ function spiltContent(content: string, spiltTag: string, spiltClass: string | un
     }">${content}</${spiltTag}>`
 }
 
-function isStr(str: any): boolean {
-  return typeof str === 'string'
-}
 
-function isArray(arr: any): boolean {
-  return Array.isArray(arr)
-}
