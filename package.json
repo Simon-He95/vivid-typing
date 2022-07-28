@@ -65,7 +65,7 @@
     "vite-plugin-page": "0.0.0-alpha.0",
     "vite-plugin-pages": "^0.22.0",
     "vitest": "^0.7.0",
-    "vivid-typing": "workspace:1.1.22",
+    "vivid-typing": "workspace:1.1.23",
     "vue-router": "^4.0.14",
     "vue-tsc": "^0.33.2"
   },
