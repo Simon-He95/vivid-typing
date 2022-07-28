@@ -1,5 +1,5 @@
 import { defineComponent, h, ref, watch } from 'vue'
-import { animationFrameWrapper, createElement, isArray, isStr, addStyle } from 'simon-js-tool'
+import { addStyle, animationFrameWrapper, isArray, isStr } from 'simon-js-tool'
 import type { DefineComponent, Ref } from 'vue'
 import type { defaultProps } from './type'
 
@@ -315,5 +315,3 @@ function spiltContent(content: string, spiltTag: string, spiltClass: string | un
   return `<${spiltTag}  class="vivid-typing_tagClass${tail ? ' vivid-typing_move' : ''} ${spiltClass || ''}" style="${spiltStyle ? typeof spiltStyle === 'function' ? spiltStyle(currentIndex) : spiltStyle : ''
     }">${content}</${spiltTag}>`
 }
-
-
