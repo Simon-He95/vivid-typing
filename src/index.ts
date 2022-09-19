@@ -105,18 +105,16 @@ export const VividTyping = defineComponent({
     const types = ref('')
     const x = ref<number>(0)
     const y = ref<number>(0)
-    const timers: any[] = []
     let preContent: string | unknown[] = ''
     const duration = ref<number>(props.interval)
 
-    initData(props, types, x, y, timers, preContent as string, vividTypingEl, duration)
+    initData(props, types, x, y, preContent as string, vividTypingEl, duration)
     preContent = props.content
     watch(props, (newProps: any) => {
-      timers.forEach(timer => clearTimeout(timer))
       if (typeof newProps.content === 'string')
-        deleteModel(types, newProps, x, y, timers, preContent, vividTypingEl, duration)
+        deleteModel(types, newProps, x, y, preContent, vividTypingEl, duration)
       else
-        initData(newProps, types, x, y, timers, preContent, vividTypingEl, duration)
+        initData(newProps, types, x, y, preContent, vividTypingEl, duration)
       preContent = props.content
     })
 
@@ -135,14 +133,13 @@ export const VividTyping = defineComponent({
   },
 }) as DefineComponent<defaultProps>
 
-function initData(props: any, types: Ref<string>, x: Ref<number>, y: Ref<number>, timers: any[], preContent: string | unknown[], vividTypingEl: Ref<HTMLElement | undefined>, duration: Ref<number>) {
+function initData(props: any, types: Ref<string>, x: Ref<number>, y: Ref<number>, preContent: string | unknown[], vividTypingEl: Ref<HTMLElement | undefined>, duration: Ref<number>) {
   const { delay, content } = props
   const copyContent = content
-  timers.length = 0
-  animationFrameWrapper(() => updateContext(props, types, copyContent, x, y, timers, preContent, vividTypingEl, duration), delay, true)
+  animationFrameWrapper(() => updateContext(props, types, copyContent, x, y, preContent, vividTypingEl, duration), delay, true)
 }
 
-function deleteModel(types: Ref<string>, newProps: defaultProps, x: Ref<number>, y: Ref<number>, timers: any[], preContent: string | unknown[], vividTypingEl: Ref<HTMLElement | undefined>, duration: Ref<number>) {
+function deleteModel(types: Ref<string>, newProps: defaultProps, x: Ref<number>, y: Ref<number>, preContent: string | unknown[], vividTypingEl: Ref<HTMLElement | undefined>, duration: Ref<number>) {
   const { content, interval, spiltTag } = newProps
   if (isStr(content) && isStr(preContent) && types.value.length > 0 && content.indexOf(preContent as string) !== 0) {
     const len = preContent.length - 1
@@ -165,12 +162,12 @@ function deleteModel(types: Ref<string>, newProps: defaultProps, x: Ref<number>,
       else
         types.value = types.value.substring(0, types.value.length - 1)
     }
-    animationFrameWrapper(() => deleteModel(types, newProps, x, y, timers, preContent, vividTypingEl, duration), interval, true)
+    animationFrameWrapper(() => deleteModel(types, newProps, x, y, preContent, vividTypingEl, duration), interval, true)
   }
-  else if (isArray(content) || isArray(preContent) || content.indexOf(preContent as string) === 0) { initData(newProps, types, x, y, timers, preContent, vividTypingEl, duration) }
+  else if (isArray(content) || isArray(preContent) || content.indexOf(preContent as string) === 0) { initData(newProps, types, x, y, preContent, vividTypingEl, duration) }
 }
 
-function updateContext(props: defaultProps, types: Ref, copyContent: string, x: Ref<number>, y: Ref<number>, timers: any[], preContent: string | unknown[], vividTypingEl: Ref<HTMLElement | undefined>, duration: Ref<number>) {
+function updateContext(props: defaultProps, types: Ref, copyContent: string, x: Ref<number>, y: Ref<number>, preContent: string | unknown[], vividTypingEl: Ref<HTMLElement | undefined>, duration: Ref<number>) {
   let currentIndex = -1
   const {
     interval,
