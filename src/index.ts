@@ -1,5 +1,5 @@
 import { defineComponent, h, ref, watch } from 'vue'
-import { addStyle, animationFrameWrapper, isArray, isStr } from 'simon-js-tool'
+import { addStyle, useAnimationFrame, isArray, isStr } from 'lazy-js-utils'
 import type { DefineComponent, Ref } from 'vue'
 import type { defaultProps } from './type'
 
@@ -136,7 +136,7 @@ export const VividTyping = defineComponent({
 function initData(props: any, types: Ref<string>, x: Ref<number>, y: Ref<number>, preContent: string | unknown[], vividTypingEl: Ref<HTMLElement | undefined>, duration: Ref<number>) {
   const { delay, content } = props
   const copyContent = content
-  animationFrameWrapper(() => updateContext(props, types, copyContent, x, y, preContent, vividTypingEl, duration), delay, true)
+  useAnimationFrame(() => updateContext(props, types, copyContent, x, y, preContent, vividTypingEl, duration), delay, true)
 }
 
 function deleteModel(types: Ref<string>, newProps: defaultProps, x: Ref<number>, y: Ref<number>, preContent: string | unknown[], vividTypingEl: Ref<HTMLElement | undefined>, duration: Ref<number>) {
@@ -162,7 +162,7 @@ function deleteModel(types: Ref<string>, newProps: defaultProps, x: Ref<number>,
       else
         types.value = types.value.substring(0, types.value.length - 1)
     }
-    animationFrameWrapper(() => deleteModel(types, newProps, x, y, preContent, vividTypingEl, duration), interval, true)
+    useAnimationFrame(() => deleteModel(types, newProps, x, y, preContent, vividTypingEl, duration), interval, true)
   }
   else if (isArray(content) || isArray(preContent) || content.indexOf(preContent as string) === 0) { initData(newProps, types, x, y, preContent, vividTypingEl, duration) }
 }
@@ -214,7 +214,7 @@ function updateContext(props: defaultProps, types: Ref, copyContent: string, x: 
 
     if (content.length)
       content = content.slice(1)
-    if (content.length !== 0) { animationFrameWrapper(dfs, interval, true) }
+    if (content.length !== 0) { useAnimationFrame(dfs, interval, true) }
     else if (scrollX) {
       const el = vividTypingEl.value?.childNodes[0] as HTMLElement
       if (!el)
@@ -229,7 +229,7 @@ function updateContext(props: defaultProps, types: Ref, copyContent: string, x: 
         if (x.value > ratio) {
           duration.value = 0
           x.value = -ratio
-          animationFrameWrapper(() => duration.value = props.interval, 100, true)
+          useAnimationFrame(() => duration.value = props.interval, 100, true)
         }
         else { x.value = x.value + speed }
       }
@@ -237,12 +237,12 @@ function updateContext(props: defaultProps, types: Ref, copyContent: string, x: 
         if (x.value < -ratio) {
           duration.value = 0
           x.value = ratio
-          animationFrameWrapper(() => duration.value = props.interval, 100, true)
+          useAnimationFrame(() => duration.value = props.interval, 100, true)
         }
         else { x.value = x.value - speed }
       }
 
-      animationFrameWrapper(dfs, interval, true)
+      useAnimationFrame(dfs, interval, true)
     }
     else if (scrollY) {
       const el = vividTypingEl.value?.childNodes[0] as HTMLElement
@@ -259,7 +259,7 @@ function updateContext(props: defaultProps, types: Ref, copyContent: string, x: 
         if (y.value < -ratio) {
           duration.value = 0
           y.value = ratio
-          animationFrameWrapper(() => duration.value = props.interval, 100, true)
+          useAnimationFrame(() => duration.value = props.interval, 100, true)
         }
         else { y.value = y.value - speed }
       }
@@ -267,18 +267,18 @@ function updateContext(props: defaultProps, types: Ref, copyContent: string, x: 
         if (y.value > ratio) {
           duration.value = 0
           y.value = -ratio
-          animationFrameWrapper(() => duration.value = props.interval, 100, true)
+          useAnimationFrame(() => duration.value = props.interval, 100, true)
         }
         else { y.value = y.value + speed }
       }
-      animationFrameWrapper(dfs, interval, true)
+      useAnimationFrame(dfs, interval, true)
     }
     else if (infinity) {
       currentIndex = 0
       if (!stable)
-        animationFrameWrapper(() => types.value = '', 100, true)
+        useAnimationFrame(() => types.value = '', 100, true)
 
-      animationFrameWrapper(() => {
+      useAnimationFrame(() => {
         if (stable)
           types.value = ''
         content = copyContent
@@ -286,7 +286,7 @@ function updateContext(props: defaultProps, types: Ref, copyContent: string, x: 
       }, interval, true)
     }
     else {
-      animationFrameWrapper(() => {
+      useAnimationFrame(() => {
         const el = vividTypingEl.value?.childNodes[vividTypingEl.value?.childNodes.length - 1] as HTMLElement
         if (!el)
           return
@@ -295,7 +295,7 @@ function updateContext(props: defaultProps, types: Ref, copyContent: string, x: 
         el.setAttribute('class', attributes)
       }, 0, true)
 
-      animationFrameWrapper(() => finish?.(), interval, true)
+      useAnimationFrame(() => finish?.(), interval, true)
     }
   }
 }
