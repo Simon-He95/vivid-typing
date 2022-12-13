@@ -1,2 +1,2 @@
-import { insertUnocssInclude } from 'simon-js-tool'
-insertUnocssInclude()
+// import { insertUnocssInclude } from 'lazy-js-utils'
+// insertUnocssInclude()
