@@ -1,6 +1,6 @@
 # Vivid Typing
 
-[online](http://vivid-typing.hejian.club/)
+[online](https://vivid-typing.netlify.app/
 
 
 # Start
