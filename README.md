@@ -52,3 +52,11 @@ type defaultProps = {
 - support use <strong><em>\n</em></strong> to split content
 - support template `<%>` like `content="Hi,<%><i class="emoji"/></%>simon"`
 
+## Problem
+```
+## 如果遇到以下问题: 
+About Missing ref owner contextMissing ref owner context
+
+## 解决方法: 可在项目的vite.config.ts中配置resolve: { dedupe: ['vue'] }
+```
+
