@@ -208,7 +208,7 @@ function updateContext(props: defaultProps, types: Ref, copyContent: string, x: 
       }
     }
     if (spiltTag && content.length)
-      types.value += spiltContent(content[0], spiltTag, spiltClass, spiltStyle, currentIndex, tail)
+      types.value += spiltContent(content[0], spiltTag, spiltClass, spiltStyle, currentIndex, tail!)
     else if (content.length)
       types.value += content[0]
 
@@ -229,17 +229,17 @@ function updateContext(props: defaultProps, types: Ref, copyContent: string, x: 
         if (x.value > ratio) {
           duration.value = 0
           x.value = -ratio
-          useAnimationFrame(() => duration.value = props.interval, 100, true)
+          useAnimationFrame(() => duration.value = props.interval!, 100, true)
         }
-        else { x.value = x.value + speed }
+        else { x.value = x.value + speed! }
       }
       else {
         if (x.value < -ratio) {
           duration.value = 0
           x.value = ratio
-          useAnimationFrame(() => duration.value = props.interval, 100, true)
+          useAnimationFrame(() => duration.value = props.interval!, 100, true)
         }
-        else { x.value = x.value - speed }
+        else { x.value = x.value - speed! }
       }
 
       useAnimationFrame(dfs, interval, true)
@@ -259,17 +259,17 @@ function updateContext(props: defaultProps, types: Ref, copyContent: string, x: 
         if (y.value < -ratio) {
           duration.value = 0
           y.value = ratio
-          useAnimationFrame(() => duration.value = props.interval, 100, true)
+          useAnimationFrame(() => duration.value = props.interval!, 100, true)
         }
-        else { y.value = y.value - speed }
+        else { y.value = y.value - speed! }
       }
       else {
         if (y.value > ratio) {
           duration.value = 0
           y.value = -ratio
-          useAnimationFrame(() => duration.value = props.interval, 100, true)
+          useAnimationFrame(() => duration.value = props.interval!, 100, true)
         }
-        else { y.value = y.value + speed }
+        else { y.value = y.value + speed! }
       }
       useAnimationFrame(dfs, interval, true)
     }
