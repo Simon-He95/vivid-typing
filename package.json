@@ -1,7 +1,7 @@
 {
   "name": "vivid-typing",
   "type": "module",
-  "version": "1.1.33",
+  "version": "1.1.34",
   "packageManager": "pnpm@6.32.3",
   "keywords": [
     "vivid-typing",
@@ -33,8 +33,8 @@
   },
   "scripts": {
     "build": "npm run build:js && npm run build:css",
-    "build:js":"unbuild",
-    "build:css":"esno ./buildStyle.ts",
+    "build:js": "unbuild",
+    "build:css": "esno ./buildStyle.ts",
     "play": "npm -C playground run dev",
     "play:build": "npm -C playground run build",
     "preview": "npm -C playground run preview",
