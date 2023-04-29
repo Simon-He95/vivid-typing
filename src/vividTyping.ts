@@ -4,6 +4,7 @@ import type { DefineComponent, Ref } from 'vue'
 import type { defaultProps } from './type'
 
 export const VividTyping = defineComponent({
+  name: 'VividTyping',
   props: {
     interval: {
       type: Number,
@@ -88,7 +89,7 @@ export const VividTyping = defineComponent({
       },
     })
   },
-}) as DefineComponent<defaultProps>
+}) as DefineComponent<defaultProps&Record<string, any>>
 
 function initData(props: any, types: Ref<string>, x: Ref<number>, y: Ref<number>, preContent: string | unknown[], vividTypingEl: Ref<HTMLElement | undefined>, duration: Ref<number>) {
   const { delay, content } = props
