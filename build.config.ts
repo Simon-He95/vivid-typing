@@ -10,7 +10,7 @@ export default defineBuildConfig({
   // Change outDir, default is 'dist'
   outDir: 'dist',
 
-  externals: ['vue'],
+  externals: ['vue', '*.css'],
 
   // Generates .d.ts declaration file
   declaration: true,

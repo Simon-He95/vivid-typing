@@ -23,7 +23,7 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.mjs"
     },
-    "./style.css": "./dist/index.css"
+    "./style.css":"./dist/index.css"
   },
   "files": [
     "dist"
@@ -32,10 +32,11 @@
   "bugs": {
     "url": "https://github.com/Simon-He95/vivid-typing/issues"
   },
+  "config": {
+    "failOnWarn": false
+  },
   "scripts": {
-    "build": "npm run build:js && npm run build:css",
-    "build:js": "unbuild",
-    "build:css": "esno ./buildStyle.ts",
+    "build": "esno ./build.ts",
     "play": "npm -C playground run dev",
     "play:build": "npm -C playground run build",
     "preview": "npm -C playground run preview",
@@ -68,7 +69,7 @@
     "vite-plugin-page": "0.0.0-alpha.0",
     "vite-plugin-pages": "^0.22.0",
     "vitest": "^0.7.0",
-    "vivid-typing": "workspace:^1.1.31",
+    "vivid-typing": "workspace:^1.1.36",
     "vue": "^3.2.31",
     "vue-router": "^4.0.14",
     "vue-tsc": "^0.33.2"
