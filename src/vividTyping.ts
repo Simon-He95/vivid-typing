@@ -1,5 +1,5 @@
-import { defineComponent, h, ref, watch } from 'vue'
-import { isArray, isStr, useAnimationFrame } from 'lazy-js-utils'
+import { defineComponent, h, onBeforeUnmount, ref, watch } from 'vue'
+import { isArray, isStr, useRaf } from 'lazy-js-utils'
 import type { DefineComponent, Ref } from 'vue'
 import type { defaultProps } from './type'
 
@@ -59,6 +59,7 @@ export const VividTyping = defineComponent({
     },
   },
   setup(props) {
+    const disposes: (() => void)[] = []
     const vividTypingEl = ref<HTMLElement>()
     const types = ref('')
     const x = ref<number>(0)
@@ -75,6 +76,10 @@ export const VividTyping = defineComponent({
         initData(newProps, types, x, y, preContent, vividTypingEl, duration)
       preContent = props.content
     })
+    onBeforeUnmount(() => {
+      disposes.forEach(dispose => dispose())
+      disposes.length = 0
+    })
 
     return () => h('div', {
       innerHTML: props.spiltTag || isArray(props.content)
@@ -88,175 +93,175 @@ export const VividTyping = defineComponent({
         'word-break': 'break-word',
       },
     })
+
+    function initData(props: any, types: Ref<string>, x: Ref<number>, y: Ref<number>, preContent: string | unknown[], vividTypingEl: Ref<HTMLElement | undefined>, duration: Ref<number>) {
+      const { delay, content } = props
+      const copyContent = content
+      disposes.push(useRaf(() => updateContext(props, types, copyContent, x, y, preContent, vividTypingEl, duration), delay, true))
+    }
+
+    function deleteModel(types: Ref<string>, newProps: defaultProps, x: Ref<number>, y: Ref<number>, preContent: string | unknown[], vividTypingEl: Ref<HTMLElement | undefined>, duration: Ref<number>) {
+      const { content, interval, spiltTag } = newProps
+      if (isStr(content) && isStr(preContent) && types.value.length > 0 && content.indexOf(preContent as string) !== 0) {
+        const len = preContent.length - 1
+
+        if (preContent[len] === '>' && preContent[len - 1] === '%' && preContent[len - 2] === '/') {
+          const _index = preContent.indexOf('<%>')
+          if (_index >= 0)
+            types.value = types.value.substring(0, _index + 1)
+          else
+            throw new Error('<%>标签不匹配')
+        }
+        if (preContent[len] === 'n' && preContent[len - 1] === '\\') {
+          types.value = types.value.slice(0, -4)
+          preContent = (preContent as string).slice(0, -2)
+        }
+        else {
+          preContent = (preContent as string).substring(0, preContent.length - 1)
+          if (spiltTag)
+            types.value = findSplitLast(types.value, spiltTag)
+          else
+            types.value = types.value.substring(0, types.value.length - 1)
+        }
+        disposes.push(useRaf(() => deleteModel(types, newProps, x, y, preContent, vividTypingEl, duration), interval, true))
+      }
+      else if (isArray(content) || isArray(preContent) || content.indexOf(preContent as string) === 0) { initData(newProps, types, x, y, preContent, vividTypingEl, duration) }
+    }
+
+    function updateContext(props: defaultProps, types: Ref, copyContent: string, x: Ref<number>, y: Ref<number>, preContent: string | unknown[], vividTypingEl: Ref<HTMLElement | undefined>, duration: Ref<number>) {
+      let currentIndex = -1
+      const {
+        interval,
+        infinity,
+        finish,
+        spiltTag,
+        spiltClass,
+        spiltStyle,
+        stable,
+        scrollX,
+        scrollY,
+        speed,
+        reverse,
+        tail,
+      } = props
+      let { content } = props
+      if (!isArray(content))
+        content = content.toString()
+
+      if (isStr(content) && isStr(preContent) && content.indexOf(preContent as string) === 0)
+        content = (content as string).substring(preContent.length)
+
+      return dfs()
+      function dfs() {
+        currentIndex++
+        if (content[0] === '\\' && content[1] === 'n') {
+          types.value += '<br>'
+          content = content.slice(2)
+        }
+        if (content[0] === '<' && content[1] === '%' && content[2] === '>') {
+          const _index = content.indexOf('</%>')
+          if (_index > 0) {
+            types.value += content.slice(3, _index)
+            content = content.slice(_index + 4)
+          }
+          else {
+            throw new Error('<%>标签不匹配')
+          }
+        }
+        if (spiltTag && content.length)
+          types.value += spiltContent(content[0], spiltTag, spiltClass, spiltStyle, currentIndex, tail!)
+        else if (content.length)
+          types.value += content[0]
+
+        if (content.length)
+          content = content.slice(1)
+        if (content.length !== 0) { disposes.push(useRaf(dfs, interval, true)) }
+        else if (scrollX) {
+          const el = vividTypingEl.value?.childNodes[0] as HTMLElement
+          if (!el)
+            return false
+          const attributes = el.getAttribute('class')?.replace('vivid-typing_tag', '') as string
+          el.removeAttribute('class')
+          el.setAttribute('class', attributes)
+          const ratio = vividTypingEl.value?.offsetWidth
+            ? 51 + Math.floor((el.offsetWidth / vividTypingEl.value?.offsetWidth) * 50)
+            : 70
+          if (reverse) {
+            if (x.value > ratio) {
+              duration.value = 0
+              x.value = -ratio
+              disposes.push(useRaf(() => duration.value = props.interval!, 100, true))
+            }
+            else { x.value = x.value + speed! }
+          }
+          else {
+            if (x.value < -ratio) {
+              duration.value = 0
+              x.value = ratio
+              disposes.push(useRaf(() => duration.value = props.interval!, 100, true))
+            }
+            else { x.value = x.value - speed! }
+          }
+
+          disposes.push(useRaf(dfs, interval, true))
+        }
+        else if (scrollY) {
+          const el = vividTypingEl.value?.childNodes[0] as HTMLElement
+          if (!el)
+            return
+          const attributes = el.getAttribute('class')?.replace('vivid-typing_tag', '') as string
+          el.removeAttribute('class')
+          el.setAttribute('class', attributes)
+          const ratio = vividTypingEl.value?.offsetHeight
+            ? (51 + Math.floor((el.offsetHeight / vividTypingEl.value?.offsetHeight) * 50))
+            : 96
+
+          if (reverse) {
+            if (y.value < -ratio) {
+              duration.value = 0
+              y.value = ratio
+              disposes.push(useRaf(() => duration.value = props.interval!, 100, true))
+            }
+            else { y.value = y.value - speed! }
+          }
+          else {
+            if (y.value > ratio) {
+              duration.value = 0
+              y.value = -ratio
+              disposes.push(useRaf(() => duration.value = props.interval!, 100, true))
+            }
+            else { y.value = y.value + speed! }
+          }
+          disposes.push(useRaf(dfs, interval, true))
+        }
+        else if (infinity) {
+          currentIndex = 0
+          if (!stable)
+            disposes.push(useRaf(() => types.value = '', 100, true))
+
+          disposes.push(useRaf(() => {
+            if (stable)
+              types.value = ''
+            content = copyContent
+            dfs()
+          }, interval, true))
+        }
+        else {
+          disposes.push(useRaf(() => {
+            const el = vividTypingEl.value?.childNodes[vividTypingEl.value?.childNodes.length - 1] as HTMLElement
+            if (!el)
+              return
+            const attributes = el.getAttribute('class')?.replace(/vivid-typing_move|vivid-typing_tag$/g, '') as string
+            el.removeAttribute('class')
+            el.setAttribute('class', attributes)
+          }, 0, true))
+
+          disposes.push(useRaf(() => finish?.(), interval, true))
+        }
+      }
+    }
   },
 }) as DefineComponent<defaultProps&Record<string, any>>
-
-function initData(props: any, types: Ref<string>, x: Ref<number>, y: Ref<number>, preContent: string | unknown[], vividTypingEl: Ref<HTMLElement | undefined>, duration: Ref<number>) {
-  const { delay, content } = props
-  const copyContent = content
-  useAnimationFrame(() => updateContext(props, types, copyContent, x, y, preContent, vividTypingEl, duration), delay, true)
-}
-
-function deleteModel(types: Ref<string>, newProps: defaultProps, x: Ref<number>, y: Ref<number>, preContent: string | unknown[], vividTypingEl: Ref<HTMLElement | undefined>, duration: Ref<number>) {
-  const { content, interval, spiltTag } = newProps
-  if (isStr(content) && isStr(preContent) && types.value.length > 0 && content.indexOf(preContent as string) !== 0) {
-    const len = preContent.length - 1
-
-    if (preContent[len] === '>' && preContent[len - 1] === '%' && preContent[len - 2] === '/') {
-      const _index = preContent.indexOf('<%>')
-      if (_index >= 0)
-        types.value = types.value.substring(0, _index + 1)
-      else
-        throw new Error('<%>标签不匹配')
-    }
-    if (preContent[len] === 'n' && preContent[len - 1] === '\\') {
-      types.value = types.value.slice(0, -4)
-      preContent = (preContent as string).slice(0, -2)
-    }
-    else {
-      preContent = (preContent as string).substring(0, preContent.length - 1)
-      if (spiltTag)
-        types.value = findSplitLast(types.value, spiltTag)
-      else
-        types.value = types.value.substring(0, types.value.length - 1)
-    }
-    useAnimationFrame(() => deleteModel(types, newProps, x, y, preContent, vividTypingEl, duration), interval, true)
-  }
-  else if (isArray(content) || isArray(preContent) || content.indexOf(preContent as string) === 0) { initData(newProps, types, x, y, preContent, vividTypingEl, duration) }
-}
-
-function updateContext(props: defaultProps, types: Ref, copyContent: string, x: Ref<number>, y: Ref<number>, preContent: string | unknown[], vividTypingEl: Ref<HTMLElement | undefined>, duration: Ref<number>) {
-  let currentIndex = -1
-  const {
-    interval,
-    infinity,
-    finish,
-    spiltTag,
-    spiltClass,
-    spiltStyle,
-    stable,
-    scrollX,
-    scrollY,
-    speed,
-    reverse,
-    tail,
-  } = props
-  let { content } = props
-  if (!isArray(content))
-    content = content.toString()
-
-  if (isStr(content) && isStr(preContent) && content.indexOf(preContent as string) === 0)
-    content = (content as string).substring(preContent.length)
-
-  return dfs()
-  function dfs() {
-    currentIndex++
-    if (content[0] === '\\' && content[1] === 'n') {
-      types.value += '<br>'
-      content = content.slice(2)
-    }
-    if (content[0] === '<' && content[1] === '%' && content[2] === '>') {
-      const _index = content.indexOf('</%>')
-      if (_index > 0) {
-        types.value += content.slice(3, _index)
-        content = content.slice(_index + 4)
-      }
-      else {
-        throw new Error('<%>标签不匹配')
-      }
-    }
-    if (spiltTag && content.length)
-      types.value += spiltContent(content[0], spiltTag, spiltClass, spiltStyle, currentIndex, tail!)
-    else if (content.length)
-      types.value += content[0]
-
-    if (content.length)
-      content = content.slice(1)
-    if (content.length !== 0) { useAnimationFrame(dfs, interval, true) }
-    else if (scrollX) {
-      const el = vividTypingEl.value?.childNodes[0] as HTMLElement
-      if (!el)
-        return false
-      const attributes = el.getAttribute('class')?.replace('vivid-typing_tag', '') as string
-      el.removeAttribute('class')
-      el.setAttribute('class', attributes)
-      const ratio = vividTypingEl.value?.offsetWidth
-        ? 51 + Math.floor((el.offsetWidth / vividTypingEl.value?.offsetWidth) * 50)
-        : 70
-      if (reverse) {
-        if (x.value > ratio) {
-          duration.value = 0
-          x.value = -ratio
-          useAnimationFrame(() => duration.value = props.interval!, 100, true)
-        }
-        else { x.value = x.value + speed! }
-      }
-      else {
-        if (x.value < -ratio) {
-          duration.value = 0
-          x.value = ratio
-          useAnimationFrame(() => duration.value = props.interval!, 100, true)
-        }
-        else { x.value = x.value - speed! }
-      }
-
-      useAnimationFrame(dfs, interval, true)
-    }
-    else if (scrollY) {
-      const el = vividTypingEl.value?.childNodes[0] as HTMLElement
-      if (!el)
-        return
-      const attributes = el.getAttribute('class')?.replace('vivid-typing_tag', '') as string
-      el.removeAttribute('class')
-      el.setAttribute('class', attributes)
-      const ratio = vividTypingEl.value?.offsetHeight
-        ? (51 + Math.floor((el.offsetHeight / vividTypingEl.value?.offsetHeight) * 50))
-        : 96
-
-      if (reverse) {
-        if (y.value < -ratio) {
-          duration.value = 0
-          y.value = ratio
-          useAnimationFrame(() => duration.value = props.interval!, 100, true)
-        }
-        else { y.value = y.value - speed! }
-      }
-      else {
-        if (y.value > ratio) {
-          duration.value = 0
-          y.value = -ratio
-          useAnimationFrame(() => duration.value = props.interval!, 100, true)
-        }
-        else { y.value = y.value + speed! }
-      }
-      useAnimationFrame(dfs, interval, true)
-    }
-    else if (infinity) {
-      currentIndex = 0
-      if (!stable)
-        useAnimationFrame(() => types.value = '', 100, true)
-
-      useAnimationFrame(() => {
-        if (stable)
-          types.value = ''
-        content = copyContent
-        dfs()
-      }, interval, true)
-    }
-    else {
-      useAnimationFrame(() => {
-        const el = vividTypingEl.value?.childNodes[vividTypingEl.value?.childNodes.length - 1] as HTMLElement
-        if (!el)
-          return
-        const attributes = el.getAttribute('class')?.replace(/vivid-typing_move|vivid-typing_tag$/g, '') as string
-        el.removeAttribute('class')
-        el.setAttribute('class', attributes)
-      }, 0, true)
-
-      useAnimationFrame(() => finish?.(), interval, true)
-    }
-  }
-}
 
 function findSplitLast(content: string, spiltTag: string) {
   const len = spiltTag.length + 3

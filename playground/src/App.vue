@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useAnimationFrame } from 'lazy-js-utils'
+import { useRaf } from 'lazy-js-utils'
 import { isDark } from '~/composables'
 const n = ref(2)
 const content1 = ref('你好鸭~')
@@ -16,7 +16,7 @@ function finish1() {
   if (index.value < contentList.length - 1)
     index.value++
   else index.value = 0
-  const stop = useAnimationFrame(() => {
+  const stop = useRaf(() => {
     content1.value = contentList[index.value]
     stop()
   }, 500)

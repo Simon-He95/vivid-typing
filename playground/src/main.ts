@@ -1,6 +1,6 @@
 import { createApp } from 'vue'
-// import { VividTyping } from '../../src'
-import { VividTyping } from 'vivid-typing'
+import { VividTyping } from '../../src'
+// import { VividTyping } from 'vivid-typing'
 // import '../../src/index.css'
 import App from './App.vue'
 
