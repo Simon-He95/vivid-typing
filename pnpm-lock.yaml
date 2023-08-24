@@ -12,8 +12,8 @@ importers:
         specifier: ^8.1.1
         version: 8.1.1(vue@3.2.31)
       lazy-js-utils:
-        specifier: ^0.0.58
-        version: 0.0.58(vue@3.2.31)
+        specifier: ^0.0.60
+        version: 0.0.60(vue@3.2.31)
     devDependencies:
       '@antfu/eslint-config':
         specifier: ^0.20.2
@@ -4082,8 +4082,8 @@ packages:
       vue: 3.2.31
     dev: false
 
-  /lazy-js-utils@0.0.58(vue@3.2.31):
-    resolution: {integrity: sha512-a8O7CkGgUuGwFZzdHoG3oTWkn2R1Aj63Ba8DFwUUi2aMxQMFc9t0HzoeKYttZsKst78jqU73GIhwfBaBVr0pww==}
+  /lazy-js-utils@0.0.60(vue@3.2.31):
+    resolution: {integrity: sha512-2weiG4wqcleerGVaJcowSSOViGWiKJU8CqFJzSeUHVVzULsMzzJ+z4Sk2c0E8vPMjrpKZmc5EwGzYRuttNQ+0w==}
     peerDependencies:
       vue: ^3.2.41
     dependencies:
