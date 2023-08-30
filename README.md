@@ -12,6 +12,7 @@
 # main.ts 引入
   import { createApp } from 'vue'
   import { VividTyping } from 'vivid-typing'
+  import 'vivid-typing/style.css'
 
   const app = createApp(App)
   app.component('VividTyping', VividTyping)
