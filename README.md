@@ -23,7 +23,8 @@
 
 ```markdown
   # 导入css样式
-  # import 'vivid-typing/index.css'
+  # import 'vivid-typing/dist/index.css'
+
   <vivid-typing :interval="100" :delay="0" h-10 content="hi"></vivid-typing>
 ```
  ## 更多使用技巧可以参考[Page](https://github.com/Simon-He95/vivid-typing/blob/master/playground/src/App.vue)
