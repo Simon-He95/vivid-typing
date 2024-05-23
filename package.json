@@ -37,7 +37,7 @@
     "test": "vitest --dir test",
     "lint": "eslint . --cache",
     "lint:fix": "eslint . --fix --cache",
-    "release": "bumpp --commit --tag --push && pnpm publish"
+    "release": "npm run build && bumpp --commit --tag --push && pnpm publish"
   },
   "dependencies": {
     "@vueuse/core": "^8.1.1",
