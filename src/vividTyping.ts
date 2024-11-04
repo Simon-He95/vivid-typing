@@ -1,8 +1,8 @@
 import { defineComponent, h, onBeforeUnmount, ref, watch } from 'vue'
-import { isArray, isStr, useRaf } from 'lazy-js-utils'
+import { isArray, isStr } from 'lazy-js-utils'
 import type { DefineComponent, Ref } from 'vue'
 import type { defaultProps } from './type'
-
+import { useRaf } from './useRaf'
 export const VividTyping = defineComponent({
   name: 'VividTyping',
   props: {
@@ -20,6 +20,10 @@ export const VividTyping = defineComponent({
     delay: {
       type: Number,
       default: 0,
+    },
+    infinityDelay: {
+      type: Number,
+      default: 500,
     },
     finish: {
       type: Function,
@@ -97,7 +101,10 @@ export const VividTyping = defineComponent({
     function initData(props: any, types: Ref<string>, x: Ref<number>, y: Ref<number>, preContent: string | unknown[], vividTypingEl: Ref<HTMLElement | undefined>, duration: Ref<number>) {
       const { delay, content } = props
       const copyContent = content
-      disposes.push(useRaf(() => updateContext(props, types, copyContent, x, y, preContent, vividTypingEl, duration), delay, true))
+      disposes.push(useRaf(() => updateContext(props, types, copyContent, x, y, preContent, vividTypingEl, duration), {
+        delta: delay,
+        autoStop: true,
+      }))
     }
 
     function deleteModel(types: Ref<string>, newProps: defaultProps, x: Ref<number>, y: Ref<number>, preContent: string | unknown[], vividTypingEl: Ref<HTMLElement | undefined>, duration: Ref<number>) {
@@ -123,7 +130,10 @@ export const VividTyping = defineComponent({
           else
             types.value = types.value.substring(0, types.value.length - 1)
         }
-        disposes.push(useRaf(() => deleteModel(types, newProps, x, y, preContent, vividTypingEl, duration), interval, true))
+        disposes.push(useRaf(() => deleteModel(types, newProps, x, y, preContent, vividTypingEl, duration), {
+          delta: interval,
+          autoStop: true,
+        }))
       }
       else if (isArray(content) || isArray(preContent) || content.indexOf(preContent as string) === 0) { initData(newProps, types, x, y, preContent, vividTypingEl, duration) }
     }
@@ -133,6 +143,7 @@ export const VividTyping = defineComponent({
       const {
         interval,
         infinity,
+        infinityDelay,
         finish,
         spiltTag,
         spiltClass,
@@ -175,7 +186,12 @@ export const VividTyping = defineComponent({
 
         if (content.length)
           content = content.slice(1)
-        if (content.length !== 0) { disposes.push(useRaf(dfs, interval, true)) }
+        if (content.length !== 0) {
+          disposes.push(useRaf(dfs, {
+            delta: interval,
+            autoStop: true,
+          }))
+        }
         else if (scrollX) {
           const el = vividTypingEl.value?.childNodes[0] as HTMLElement
           if (!el)
@@ -190,7 +206,10 @@ export const VividTyping = defineComponent({
             if (x.value > ratio) {
               duration.value = 0
               x.value = -ratio
-              disposes.push(useRaf(() => duration.value = props.interval!, 100, true))
+              disposes.push(useRaf(() => duration.value = props.interval!, {
+                delta: 100,
+                autoStop: true,
+              }))
             }
             else { x.value = x.value + speed! }
           }
@@ -198,12 +217,17 @@ export const VividTyping = defineComponent({
             if (x.value < -ratio) {
               duration.value = 0
               x.value = ratio
-              disposes.push(useRaf(() => duration.value = props.interval!, 100, true))
+              disposes.push(useRaf(() => duration.value = props.interval!, {
+                delta: 100,
+                autoStop: true,
+              }))
             }
             else { x.value = x.value - speed! }
           }
-
-          disposes.push(useRaf(dfs, interval, true))
+          disposes.push(useRaf(dfs, {
+            delta: interval,
+            autoStop: true,
+          }))
         }
         else if (scrollY) {
           const el = vividTypingEl.value?.childNodes[0] as HTMLElement
@@ -220,7 +244,10 @@ export const VividTyping = defineComponent({
             if (y.value < -ratio) {
               duration.value = 0
               y.value = ratio
-              disposes.push(useRaf(() => duration.value = props.interval!, 100, true))
+              disposes.push(useRaf(() => duration.value = props.interval!, {
+                delta: 100,
+                autoStop: true,
+              }))
             }
             else { y.value = y.value - speed! }
           }
@@ -228,23 +255,36 @@ export const VividTyping = defineComponent({
             if (y.value > ratio) {
               duration.value = 0
               y.value = -ratio
-              disposes.push(useRaf(() => duration.value = props.interval!, 100, true))
+              disposes.push(useRaf(() => duration.value = props.interval!, {
+                delta: 100,
+                autoStop: true,
+              }))
             }
             else { y.value = y.value + speed! }
           }
-          disposes.push(useRaf(dfs, interval, true))
+          disposes.push(useRaf(dfs, {
+            delta: interval,
+            autoStop: true,
+          }))
         }
         else if (infinity) {
           currentIndex = 0
-          if (!stable)
-            disposes.push(useRaf(() => types.value = '', 100, true))
+          if (!stable) {
+            disposes.push(useRaf(() => types.value = '', {
+              delta: infinityDelay,
+              autoStop: true,
+            }))
+          }
 
           disposes.push(useRaf(() => {
             if (stable)
               types.value = ''
             content = copyContent
             dfs()
-          }, interval, true))
+          }, {
+            delta: infinityDelay,
+            autoStop: true,
+          }))
         }
         else {
           disposes.push(useRaf(() => {
@@ -254,14 +294,20 @@ export const VividTyping = defineComponent({
             const attributes = el.getAttribute('class')?.replace(/vivid-typing_move|vivid-typing_tag$/g, '') as string
             el.removeAttribute('class')
             el.setAttribute('class', attributes)
-          }, 0, true))
+          }, {
+            delta: 0,
+            autoStop: true,
+          }))
 
-          disposes.push(useRaf(() => finish?.(), interval, true))
+          disposes.push(useRaf(() => finish?.(), {
+            delta: infinityDelay,
+            autoStop: true,
+          }))
         }
       }
     }
   },
-}) as DefineComponent<defaultProps&Record<string, any>>
+}) as DefineComponent<defaultProps & Record<string, any>>
 
 function findSplitLast(content: string, spiltTag: string) {
   const len = spiltTag.length + 3

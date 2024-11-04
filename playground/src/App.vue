@@ -67,6 +67,7 @@ function AnimalstyleFn(i) {
       :interval="200"
       :delay="0"
       :infinity="true"
+      :infinity-delay="2000"
       spilt-tag="span"
       spilt-class="animate-bounce"
       :spilt-style="styleFn"
