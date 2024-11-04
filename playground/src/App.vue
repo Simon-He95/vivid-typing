@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useRaf } from 'lazy-js-utils'
 import { isDark } from '~/composables'
+
 const n = ref(2)
 const content1 = ref('你好鸭~')
 const contentList = [
@@ -98,7 +99,7 @@ function AnimalstyleFn(i) {
     <div border-2 w-50 ma border-rd-1 border-dashed m-y-5 overflow-hidden>
       <vivid-typing
         :scroll-y="true"
-        :content="'当前关卡 level:' + n"
+        :content="`当前关卡 level:${n}`"
         text-sm
         h-5
         :speed="10"

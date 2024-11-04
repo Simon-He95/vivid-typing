@@ -1,2 +1,2 @@
-export * from './vividTyping'
 export * from './type'
+export * from './vividTyping'

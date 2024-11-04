@@ -1,20 +1,20 @@
 {
   "compilerOptions": {
     "target": "esnext",
-    "module": "commonjs",
+    "jsx": "preserve",
     "lib": [
       "esnext",
       "DOM"
     ],
+    "module": "commonjs",
     "moduleResolution": "node",
-    "esModuleInterop": true,
-    "strict": true,
-    "jsx": "preserve",
-    "strictNullChecks": true,
     "resolveJsonModule": true,
-    "skipLibCheck": true,
+    "strict": true,
+    "strictNullChecks": true,
+    "sourceMap": true,
+    "esModuleInterop": true,
     "skipDefaultLibCheck": true,
-    "sourceMap": true
+    "skipLibCheck": true
   },
   "exclude": [
     "dist",

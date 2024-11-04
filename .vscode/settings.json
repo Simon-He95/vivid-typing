@@ -9,6 +9,6 @@
     "source.fixAll.eslint": "explicit"
   },
   "files.associations": {
-    "*.css": "postcss",
-  },
+    "*.css": "postcss"
+  }
 }

@@ -1,8 +1,8 @@
-import { defineComponent, h, onBeforeUnmount, ref, watch } from 'vue'
-import { isArray, isStr } from 'lazy-js-utils'
 import type { DefineComponent, Ref } from 'vue'
 import type { defaultProps } from './type'
-import { useRaf } from './useRaf'
+import { isArray, isStr, useRaf } from 'lazy-js-utils'
+import { defineComponent, h, onBeforeUnmount, ref, watch } from 'vue'
+
 export const VividTyping = defineComponent({
   name: 'VividTyping',
   props: {
@@ -135,7 +135,9 @@ export const VividTyping = defineComponent({
           autoStop: true,
         }))
       }
-      else if (isArray(content) || isArray(preContent) || content.indexOf(preContent as string) === 0) { initData(newProps, types, x, y, preContent, vividTypingEl, duration) }
+      else if (isArray(content) || isArray(preContent) || content.indexOf(preContent as string) === 0) {
+        initData(newProps, types, x, y, preContent, vividTypingEl, duration)
+      }
     }
 
     function updateContext(props: defaultProps, types: Ref, copyContent: string, x: Ref<number>, y: Ref<number>, preContent: string | unknown[], vividTypingEl: Ref<HTMLElement | undefined>, duration: Ref<number>) {
@@ -319,5 +321,5 @@ function findSplitLast(content: string, spiltTag: string) {
 
 function spiltContent(content: string, spiltTag: string, spiltClass: string | undefined, spiltStyle: string | Function | undefined, currentIndex: number, tail: boolean) {
   return `<${spiltTag}  class="vivid-typing_tagClass${tail ? ' vivid-typing_move' : ''} ${spiltClass || ''}" style="${spiltStyle ? typeof spiltStyle === 'function' ? spiltStyle(currentIndex) : spiltStyle : ''
-    }">${content}</${spiltTag}>`
+  }">${content}</${spiltTag}>`
 }

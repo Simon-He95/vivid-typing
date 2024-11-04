@@ -2,6 +2,7 @@ export interface defaultProps {
   interval?: number
   delay?: number
   infinity?: boolean
+  infinityDelay?: number
   finish?: Function
   spiltTag?: string
   spiltClass?: string
