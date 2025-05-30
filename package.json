@@ -1,7 +1,7 @@
 {
   "name": "vivid-typing",
   "type": "module",
-  "version": "1.1.46",
+  "version": "1.1.47",
   "packageManager": "pnpm@10.11.0",
   "author": "Simon He",
   "license": "MIT",
