@@ -9,11 +9,11 @@
   },
   "dependencies": {
     "@vueuse/core": "^8.9.4",
-    "vue": "^3.5.12",
-    "vue-router": "^4.4.5"
+    "vue": "^3.5.16",
+    "vue-router": "^4.5.1"
   },
   "devDependencies": {
-    "@iconify-json/carbon": "^1.2.4",
+    "@iconify-json/carbon": "^1.2.8",
     "@types/node": "^17.0.45",
     "@unocss/preset-icons": "^0.33.5",
     "@unocss/reset": "^0.29.6",

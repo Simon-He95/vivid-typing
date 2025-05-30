@@ -14,17 +14,8 @@ export default defineConfig({
   },
   bundle: true,
   external: [
-    'vite',
     'vue',
-    'vue/compiler-sfc',
-    'webpack',
-    'rollup',
-    'esbuild',
-    'tsup',
-    'spark-md5',
-    'qrcode',
-    'htmlparser2',
-    '@vueuse/core',
+    'lazy-js-utils',
   ],
   platform: 'node',
 })
