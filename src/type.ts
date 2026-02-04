@@ -3,11 +3,11 @@ export interface defaultProps {
   delay?: number
   infinity?: boolean
   infinityDelay?: number
-  finish?: Function
+  finish?: () => void
   spiltTag?: string
   spiltClass?: string
-  spiltStyle?: string | Function
-  content: string | string[]
+  spiltStyle?: string | ((index: number) => string)
+  content?: string | string[]
   stable?: boolean
   scrollX?: boolean
   scrollY?: boolean

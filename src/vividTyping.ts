@@ -1,7 +1,14 @@
-import type { DefineComponent, Ref } from 'vue'
+import type { DefineComponent, PropType, Ref } from 'vue'
 import type { defaultProps } from './type'
 import { isArray, isStr, useRaf } from 'lazy-js-utils'
 import { defineComponent, h, onBeforeUnmount, ref, watch } from 'vue'
+
+type VividTypingContent = defaultProps['content']
+type VividTypingSpiltStyle = defaultProps['spiltStyle']
+
+function normalizeContent(content: VividTypingContent): string | string[] {
+  return content ?? ''
+}
 
 export const VividTyping = defineComponent({
   name: 'VividTyping',
@@ -11,7 +18,7 @@ export const VividTyping = defineComponent({
       default: 100,
     },
     content: {
-      type: [String, Array],
+      type: [String, Array] as PropType<VividTypingContent>,
       default: '',
     },
     infinity: {
@@ -26,7 +33,7 @@ export const VividTyping = defineComponent({
       default: 500,
     },
     finish: {
-      type: Function,
+      type: Function as PropType<defaultProps['finish']>,
     },
     spiltTag: {
       type: String,
@@ -35,7 +42,7 @@ export const VividTyping = defineComponent({
       type: String,
     },
     spiltStyle: {
-      type: [String, Function],
+      type: [String, Function] as PropType<VividTypingSpiltStyle>,
     },
     stable: {
       type: Boolean,
@@ -68,21 +75,22 @@ export const VividTyping = defineComponent({
     const types = ref('')
     const x = ref<number>(0)
     const y = ref<number>(0)
-    let preContent: string | unknown[] = ''
+    let preContent: VividTypingContent = ''
     const duration = ref<number>(props.interval)
 
-    initData(props, types, x, y, preContent as string, vividTypingEl, duration)
-    preContent = props.content
-    watch(props, (newProps: any) => {
-      if (typeof newProps.content === 'string')
+    initData(props, types, x, y, preContent, vividTypingEl, duration)
+    preContent = normalizeContent(props.content)
+    watch(props, (newProps: defaultProps) => {
+      cancelPending()
+      const nextContent = normalizeContent(newProps.content)
+      if (typeof nextContent === 'string')
         deleteModel(types, newProps, x, y, preContent, vividTypingEl, duration)
       else
         initData(newProps, types, x, y, preContent, vividTypingEl, duration)
-      preContent = props.content
+      preContent = nextContent
     })
     onBeforeUnmount(() => {
-      disposes.forEach(dispose => dispose())
-      disposes.length = 0
+      cancelPending()
     })
 
     return () => h('div', {
@@ -98,17 +106,23 @@ export const VividTyping = defineComponent({
       },
     })
 
-    function initData(props: any, types: Ref<string>, x: Ref<number>, y: Ref<number>, preContent: string | unknown[], vividTypingEl: Ref<HTMLElement | undefined>, duration: Ref<number>) {
-      const { delay, content } = props
-      const copyContent = content
+    function cancelPending() {
+      disposes.forEach(dispose => dispose())
+      disposes.length = 0
+    }
+
+    function initData(props: defaultProps, types: Ref<string>, x: Ref<number>, y: Ref<number>, preContent: VividTypingContent, vividTypingEl: Ref<HTMLElement | undefined>, duration: Ref<number>) {
+      const { delay } = props
+      const copyContent = normalizeContent(props.content)
       disposes.push(useRaf(() => updateContext(props, types, copyContent, x, y, preContent, vividTypingEl, duration), {
         delta: delay,
         autoStop: true,
       }))
     }
 
-    function deleteModel(types: Ref<string>, newProps: defaultProps, x: Ref<number>, y: Ref<number>, preContent: string | unknown[], vividTypingEl: Ref<HTMLElement | undefined>, duration: Ref<number>) {
-      const { content, interval, spiltTag } = newProps
+    function deleteModel(types: Ref<string>, newProps: defaultProps, x: Ref<number>, y: Ref<number>, preContent: VividTypingContent, vividTypingEl: Ref<HTMLElement | undefined>, duration: Ref<number>) {
+      const { interval, spiltTag } = newProps
+      const content = normalizeContent(newProps.content)
       if (isStr(content) && isStr(preContent) && types.value.length > 0 && content.indexOf(preContent as string) !== 0) {
         const len = preContent.length - 1
 
@@ -140,7 +154,7 @@ export const VividTyping = defineComponent({
       }
     }
 
-    function updateContext(props: defaultProps, types: Ref, copyContent: string, x: Ref<number>, y: Ref<number>, preContent: string | unknown[], vividTypingEl: Ref<HTMLElement | undefined>, duration: Ref<number>) {
+    function updateContext(props: defaultProps, types: Ref<string>, copyContent: VividTypingContent, x: Ref<number>, y: Ref<number>, preContent: VividTypingContent, vividTypingEl: Ref<HTMLElement | undefined>, duration: Ref<number>) {
       let currentIndex = -1
       const {
         interval,
@@ -157,7 +171,7 @@ export const VividTyping = defineComponent({
         reverse,
         tail,
       } = props
-      let { content } = props
+      let content = normalizeContent(props.content)
       if (!isArray(content))
         content = content.toString()
 
@@ -281,7 +295,7 @@ export const VividTyping = defineComponent({
           disposes.push(useRaf(() => {
             if (stable)
               types.value = ''
-            content = copyContent
+            content = normalizeContent(copyContent)
             dfs()
           }, {
             delta: infinityDelay,
@@ -319,7 +333,7 @@ function findSplitLast(content: string, spiltTag: string) {
   return content
 }
 
-function spiltContent(content: string, spiltTag: string, spiltClass: string | undefined, spiltStyle: string | Function | undefined, currentIndex: number, tail: boolean) {
+function spiltContent(content: string, spiltTag: string, spiltClass: string | undefined, spiltStyle: VividTypingSpiltStyle | undefined, currentIndex: number, tail: boolean) {
   return `<${spiltTag}  class="vivid-typing_tagClass${tail ? ' vivid-typing_move' : ''} ${spiltClass || ''}" style="${spiltStyle ? typeof spiltStyle === 'function' ? spiltStyle(currentIndex) : spiltStyle : ''
   }">${content}</${spiltTag}>`
 }
